@@ -14,6 +14,6 @@ public class Card_Minion extends Card {
     }
 
     public void getInfo(){
-        System.out.println("Card name: " + getName() + "\nManacost: " + getManaCost() + "\nPower: " + getPower() + "\nHP: " + this.hp + "\n");
+        System.out.println("Card name: " + getName() + "\nManacost: " + getManaCost() + "\nPower: " + getPower() + "\nHP: " + this.hp + "\nID: " + getID() + "\n");
     }
 }

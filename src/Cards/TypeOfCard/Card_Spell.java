@@ -7,6 +7,6 @@ public class Card_Spell extends Card {
         super(name, manaCost, power);
     }
     public void getInfo(){
-        System.out.println("Card name: " + getName() + "\nManacost: " + getManaCost() + "\nPower: " + getPower() + "\nHP: " + "\n");
+        System.out.println("Card name: " + getName() + "\nManacost: " + getManaCost() + "\nPower: " + getPower() + "\nHP: " + "\nID: " + getID() + "\n");
     }
 }

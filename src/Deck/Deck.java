@@ -16,12 +16,12 @@ public class Deck {
         cards.add(card);
     }
 
-    public void removeCard(String name){
+    public void removeCard(String ID){
         for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext(); ) {
             Card card = iterator.next();
-            if (card.getName().equals(name)) {
+            if (card.getID().equals(ID)) {
                 iterator.remove();
-                System.out.println(name + " has been removed from the deck.");
+                System.out.println(card.getName() + " has been removed from the deck.");
                 return;
             }
         }
@@ -29,7 +29,7 @@ public class Deck {
     }
     public Card giveCard(){
         Card HeadCard = cards.getLast();
-        this.removeCard(HeadCard.getName());
+        this.removeCard(HeadCard.getID());
         return HeadCard;
     }
 

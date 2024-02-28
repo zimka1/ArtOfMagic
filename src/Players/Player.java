@@ -13,11 +13,11 @@ public class Player {
     public Hand getHand(){
         return hand;
     }
-    public void putCardOnTable(String name, Board board){
-        Card findedCard = this.hand.findCard(name);
+    public void putCardOnTable(String ID, Board board){
+        Card findedCard = this.hand.findCard(ID);
         if (findedCard.getManaCost() <= this.nowMana){
             nowMana -= findedCard.getManaCost();
-            this.hand.removeCard(findedCard.getName());
+            this.hand.removeCard(findedCard.getID());
             board.putCardOnTable(findedCard);
         }
         else{
@@ -26,7 +26,7 @@ public class Player {
     }
 
 
-    public void PutCardInHand(Deck deck) {
+    public void putCardInHand(Deck deck) {
         this.hand.takeCard(deck);
     }
 

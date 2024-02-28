@@ -22,10 +22,10 @@ public class Game {
         yourdeck.addCard(Bobr);
         yourdeck.addCard(Alleycat);
 
-        you.PutCardInHand(yourdeck);
-        you.PutCardInHand(yourdeck);
+        you.putCardInHand(yourdeck);
+        you.putCardInHand(yourdeck);
 
-        you.putCardOnTable("Alleycat", yourBoard);
+        you.putCardOnTable(Alleycat.getID(), yourBoard);
 
         you.getHand().displayHand();
         yourdeck.displayDeck();

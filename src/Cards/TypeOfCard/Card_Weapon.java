@@ -14,6 +14,6 @@ public class Card_Weapon extends Card {
     }
 
     public void getInfo(){
-        System.out.println("Card name: " + getName() + "\nManacost: " + getManaCost() + "\nPower: " + getPower() + "\nHP: " + this.numberOfUses + "\n");
+        System.out.println("Card name: " + getName() + "\nManacost: " + getManaCost() + "\nPower: " + getPower() + "\nHP: " + this.numberOfUses + "\nID: " + getID() +  "\n");
     }
 }

@@ -18,20 +18,20 @@ public class Hand {
     public void takeCard(Deck deck) {
         cards.add(deck.giveCard());
     }
-    public Card findCard(String name){
+    public Card findCard(String ID){
         for (Card card : cards) {
-            if (card.getName().equals(name)) {
+            if (card.getID().equals(ID)) {
                 return card;
             }
         }
         return null;
     }
-    public void removeCard(String name) {
+    public void removeCard(String ID) {
         for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext(); ) {
             Card card = iterator.next();
-            if (card.getName().equals(name)) {
+            if (card.getID().equals(ID)) {
                 iterator.remove();
-                System.out.println(name + " has been removed from the hand.");
+                System.out.println(card.getName() + " has been removed from the hand.");
                 return;
             }
         }

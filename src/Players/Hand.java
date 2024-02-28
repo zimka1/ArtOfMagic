@@ -1,8 +1,8 @@
 package Players;
 
 import Deck.*;
-import GameBoard.Board;
-
+import Cards.*;
+import Cards.TypeOfCard.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
@@ -31,7 +31,7 @@ public class Hand {
             Card card = iterator.next();
             if (card.getName().equals(name)) {
                 iterator.remove();
-                System.out.println(name + " has been removed from the deck.");
+                System.out.println(name + " has been removed from the hand.");
                 return;
             }
         }

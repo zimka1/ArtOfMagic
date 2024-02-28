@@ -2,8 +2,7 @@ package GameBoard;
 import java.util.ArrayList;
 import java.util.List;
 
-import Deck.Card;
-import Players.Hand;
+import Cards.Card;
 
 public class Board {
     private List<Card> onTheBoard;

@@ -1,14 +1,14 @@
 package Players;
-import Deck.Card;
+import Cards.Card;
 import Deck.Deck;
 import GameBoard.Board;
-import Players.Hand;
+
 public class Player {
-    private Hand hand;
+    private Hand hand = new Hand();
     private int hp = 30;
 
-    private int mana = 0;
-    private int nowMana = 0;
+    private int mana = 1;
+    private int nowMana = 1;
 
     public Hand getHand(){
         return hand;

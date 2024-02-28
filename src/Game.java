@@ -1,3 +1,6 @@
+import Cards.Minions.Card_Alleycat;
+import Cards.Minions.Card_Bobr;
+import Cards.Minions.Card_SadHumster;
 import Deck.*;
 import GameBoard.*;
 import Players.*;
@@ -8,21 +11,25 @@ public class Game {
 
         Card_SadHumster SadHumster = new Card_SadHumster("Sad Humster", 3, 2, 10);
         Card_Bobr Bobr = new Card_Bobr("Bobr", 1, 1, 5);
+        Card_Alleycat Alleycat = new Card_Alleycat("Alleycat", 1, 1, 1);
 
-
-        Deck Yourdeck = new Deck();
-        Board YourBoard = new Board();
+        Deck yourdeck = new Deck();
+        Board yourBoard = new Board();
         Player you = new Player();
 
         // Создание и добавление карт в колоду
-        Yourdeck.addCard(SadHumster);
-        Yourdeck.addCard(Bobr);
+        yourdeck.addCard(SadHumster);
+        yourdeck.addCard(Bobr);
+        yourdeck.addCard(Alleycat);
 
-        System.out.println(SadHumster.getName());
-        // Отображение информации о колоде
-        Yourdeck.displayDeck();
+        you.PutCardInHand(yourdeck);
+        you.PutCardInHand(yourdeck);
 
-//        YourBoard.DisplayBoard();
+        you.putCardOnTable("Alleycat", yourBoard);
+
+        you.getHand().displayHand();
+        yourdeck.displayDeck();
+        yourBoard.DisplayBoard();
 
 
     }

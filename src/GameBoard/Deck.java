@@ -1,4 +1,4 @@
-package Deck;
+package GameBoard;
 
 import Cards.Card;
 

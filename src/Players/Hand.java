@@ -1,8 +1,8 @@
 package Players;
 
-import Deck.*;
 import Cards.*;
-import Cards.TypeOfCard.*;
+import GameBoard.Deck;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;

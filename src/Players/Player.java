@@ -1,6 +1,6 @@
 package Players;
 import Cards.Card;
-import Deck.Deck;
+import GameBoard.Deck;
 import GameBoard.Board;
 
 public class Player {

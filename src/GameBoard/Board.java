@@ -1,5 +1,6 @@
 package GameBoard;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import Cards.Card;
@@ -17,6 +18,26 @@ public class Board {
             System.out.print("Cards on the table: " + card.getName() + " ");
         }
         System.out.println("\n");
+    }
+
+    public Card findCard(String ID){
+        for (Card card : onTheBoard) {
+            if (card.getID().equals(ID)) {
+                return card;
+            }
+        }
+        return null;
+    }
+    public void removeCard(String ID) {
+        for (Iterator<Card> iterator = onTheBoard.iterator(); iterator.hasNext(); ) {
+            Card card = iterator.next();
+            if (card.getID().equals(ID)) {
+                iterator.remove();
+                System.out.println(card.getName() + " has been removed from the hand.");
+                return;
+            }
+        }
+        System.out.println("Card not found.");
     }
 
 }

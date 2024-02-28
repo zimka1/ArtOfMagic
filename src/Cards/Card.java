@@ -1,5 +1,7 @@
 package Cards;
 
+import GameBoard.Board;
+import GameBoard.Graveyard;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 public class Card {
@@ -39,6 +41,11 @@ public class Card {
     public int getPower(){return this.power;}
     public String getID(){return this.ID;}
 
+
+    public void death(Board board, Graveyard graveyard){
+        board.removeCard(this.ID);
+        graveyard.sendCardToGraveyard(this);
+    }
     public void getInfo(){
         System.out.println("Card name: " + this.name + "\nManacost: " + this.manaCost + "\nPower: " + this.power + "\nID" + this.ID + "\n");
     }

@@ -16,25 +16,26 @@ public class Game {
         Card_Spell_Fireball Fireball = new Card_Spell_Fireball("Fireball", 1, 2);
         Card_Weapon_Axe Axe = new Card_Weapon_Axe("Axe", 2, 1, 3);
 
-        Deck yourdeck = new Deck();
         Board yourBoard = new Board();
         Player you = new Player();
 
-        yourdeck.addCard(SadHumster);
-        yourdeck.addCard(Bobr);
-        yourdeck.addCard(Alleycat);
-        yourdeck.addCard(Fireball);
-        yourdeck.addCard(Axe);
 
-        you.putCardInHand(yourdeck);
-        you.putCardInHand(yourdeck);
-        you.putCardInHand(yourdeck);
+        yourBoard.getDeck().addCard(SadHumster);
+        yourBoard.getDeck().addCard(Bobr);
+        yourBoard.getDeck().addCard(Alleycat);
+        yourBoard.getDeck().addCard(Fireball);
+        yourBoard.getDeck().addCard(Axe);
+
+        you.putCardInHand(yourBoard.getDeck());
+        you.putCardInHand(yourBoard.getDeck());
+        you.putCardInHand(yourBoard.getDeck());
 
         you.putCardOnTable(Alleycat.getID(), yourBoard);
-        Alleycat.setWeapon(Axe, you.getHand());
         
+        Alleycat.setWeapon(Axe, you.getHand());
+
         you.getHand().displayHand();
-        yourdeck.displayDeck();
+        yourBoard.getDeck().displayDeck();
         yourBoard.DisplayBoard();
 
 

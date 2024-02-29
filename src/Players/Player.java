@@ -25,7 +25,9 @@ public class Player {
         }
     }
 
-
+    public void restoringMana(){
+        this.nowMana = this.mana;
+    }
     public void putCardInHand(Deck deck) {
         this.hand.takeCard(deck);
     }

@@ -6,10 +6,20 @@ import java.util.List;
 import Cards.Card;
 
 public class Board {
+
+    private Deck deck = new Deck();
+    private Graveyard graveyard = new Graveyard();
     private List<Card> onTheBoard;
+
     public Board(){
         this.onTheBoard = new ArrayList<>();
     }
+
+
+    public List<Card> getBoard(){return onTheBoard;}
+    public Deck getDeck(){return deck;}
+    public Graveyard getGraveyard(){return graveyard;}
+
     public void putCardOnTable(Card card){
         onTheBoard.add(card);
     }

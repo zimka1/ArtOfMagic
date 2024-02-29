@@ -15,7 +15,13 @@ public class Board {
     }
     public void DisplayBoard(){
         for (Card card : onTheBoard){
-            System.out.print("Cards on the table: " + card.getName() + " ");
+            System.out.print("Cards on the table:\n" + card.getName() + " ");
+            if (card.getWeapon() != null){
+                System.out.print("and has " + card.getWeapon().getName() + "\n");
+            }
+            else{
+                System.out.print("\n");
+            }
         }
         System.out.println("\n");
     }

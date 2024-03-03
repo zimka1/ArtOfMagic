@@ -14,6 +14,8 @@ public class Card {
     private int power;
     private String ID;
 
+    private int Whose = 0;
+
     private int hp;
     private Card_Weapon weapon = null;
     private int numberOfUses;
@@ -54,6 +56,10 @@ public class Card {
         return numberOfUses;
     }
     public Card_Weapon getWeapon(){return weapon;}
+    public int getWhose(){return Whose;}
+
+
+
 
     public void setName(String name){ this.name = name;}
     public void setHp(int hp) {
@@ -68,6 +74,10 @@ public class Card {
     public void setWeapon(Card_Weapon weapon, Hand hand){
         this.weapon = weapon;
         hand.removeCard(weapon.getID());
+    }
+    public void setWhose(int whoTake) {
+        this.Whose = whoTake;
+        setID(generateSHA256Hash(name + manaCost + power + whoTake));
     }
     public void removeWeapon(){
         this.weapon = null;

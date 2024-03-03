@@ -6,7 +6,6 @@ import GameBoard.Board;
 public class Player {
     private Hand hand = new Hand();
     private int hp = 30;
-
     private int mana = 1;
     private int nowMana = 1;
 
@@ -24,7 +23,6 @@ public class Player {
             System.out.println("You don't have enough mana!");
         }
     }
-
     public void restoringMana(){
         this.nowMana = this.mana;
     }

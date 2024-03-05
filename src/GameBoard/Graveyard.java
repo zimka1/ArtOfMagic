@@ -10,6 +10,7 @@ public class Graveyard {
     public Graveyard(){
         this.atTheGraveyard = new ArrayList<>();
     }
+    public List<Card> getCards(){return atTheGraveyard;}
     public void sendCardToGraveyard(Card card){
         atTheGraveyard.add(card);
     }

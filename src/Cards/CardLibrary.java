@@ -18,7 +18,7 @@ public class CardLibrary {
     public static final Card_Minion ShadowAssassin = new Card_Minion("Shadow Assassin", 5, 5, 5);
     public static final Card_Minion Lightwarden = new Card_Minion("Lightwarden", 2, 1, 1);
 
-    // Spells (урон добавлен ко всем заклинаниям)
+    // Spells
     public static final Card_Spell Fireball = new Card_Spell("Fireball", 3, 2);
     public static final Card_Spell LightningBolt = new Card_Spell("Lightning Bolt", 1, 3);
     public static final Card_Spell FrostNova = new Card_Spell("Frost Nova", 2, 2);
@@ -30,7 +30,7 @@ public class CardLibrary {
     public static final Card_Spell IceArrow = new Card_Spell("Ice Arrow", 1, 1);
     public static final Card_Spell ThunderStrike = new Card_Spell("Thunder Strike", 2, 2);
 
-    // Weapons (все оружия уже имели урон)
+    // Weapons
     public static final Card_Weapon BattleAxe = new Card_Weapon("Battle Axe", 3, 2, 2);
     public static final Card_Weapon CrystalSword = new Card_Weapon("Crystal Sword", 4, 3, 3);
     public static final Card_Weapon ShadowDagger = new Card_Weapon("Shadow Dagger", 2, 1, 4);

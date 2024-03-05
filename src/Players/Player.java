@@ -6,8 +6,8 @@ import GameBoard.Board;
 public class Player {
     private Hand hand = new Hand();
     private int hp = 30;
-    private int mana = 1;
-    private int nowMana = 1;
+    private int mana = 100;
+    private int nowMana = 100;
 
     public Hand getHand(){
         return hand;

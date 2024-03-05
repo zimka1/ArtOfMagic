@@ -2,6 +2,8 @@ import Cards.CardLibrary;
 import GameBoard.*;
 import Players.*;
 
+import static javafx.application.Application.launch;
+
 public class Game {
 
     public static void main(String[] args) {

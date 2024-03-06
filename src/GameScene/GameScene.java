@@ -1,5 +1,4 @@
 package GameScene;
-
 import Cards.*;
 import GameBoard.*;
 import Players.*;
@@ -56,17 +55,19 @@ public class GameScene extends Application {
         centerContainer.setAlignment(Pos.CENTER);
         centerContainer.getChildren().addAll(opponentBoardContainer, playerBoardContainer);
         root.setCenter(centerContainer);
+        centerContainer.setSpacing(20);
 
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1000, 800);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Art Of Magic Game");
+        primaryStage.setTitle("Art Of Magic");
         primaryStage.show();
     }
 
     private void setupGame() {
-        playerBoard.getDeck().addCard(CardLibrary.ArcaneBlast);
         playerBoard.getDeck().addCard(CardLibrary.BattleAxe);
         playerBoard.getDeck().addCard(CardLibrary.DarkLance);
+        playerBoard.getDeck().addCard(CardLibrary.EarthGiant);
+        playerBoard.getDeck().addCard(CardLibrary.GuardianOfTheForest);
         opponentBoard.getDeck().addCard(CardLibrary.ArcaneBlast);
         opponentBoard.getDeck().addCard(CardLibrary.BattleAxe);
         opponentBoard.getDeck().addCard(CardLibrary.DarkLance);
@@ -82,24 +83,24 @@ public class GameScene extends Application {
         if (player == this.player) {
             playerHandContainer.getChildren().clear();
             for (Card card : player.getHand().getCards()) {
-                Button cardButton = new Button(card.getName());
-                cardButton.setOnAction(e -> {
+                CardView cardView = new CardView(card);
+                playerHandContainer.getChildren().add(cardView);
+                cardView.setOnMouseClicked(e -> {
                     player.putCardOnTable(card.getID(), board);
                     updateBoardDisplay(board);
                     updateHandDisplay(player, board);
                 });
-                playerHandContainer.getChildren().add(cardButton);
             }
         } else {
             opponentHandContainer.getChildren().clear();
             for (Card card : player.getHand().getCards()) {
-                Button cardButton = new Button(card.getName());
-                cardButton.setOnAction(e -> {
+                CardView cardView = new CardView(card);
+                opponentHandContainer.getChildren().add(cardView);
+                cardView.setOnMouseClicked(e -> {
                     opponent.putCardOnTable(card.getID(), board);
                     updateBoardDisplay(board);
                     updateHandDisplay(player, board);
                 });
-                opponentHandContainer.getChildren().add(cardButton);
             }
         }
     }
@@ -107,14 +108,14 @@ public class GameScene extends Application {
         if (board == this.playerBoard) {
             playerBoardContainer.getChildren().clear();
             for (Card card : board.getBoard()) {
-                Button cardButton = new Button(card.getName());
-                playerBoardContainer.getChildren().add(cardButton);
+                CardView cardView = new CardView(card);
+                playerBoardContainer.getChildren().add(cardView);
             }
         } else {
             opponentBoardContainer.getChildren().clear();
             for (Card card : board.getBoard()) {
-                Button cardButton = new Button(card.getName());
-                opponentBoardContainer.getChildren().add(cardButton);
+                CardView cardView = new CardView(card);
+                opponentBoardContainer.getChildren().add(cardView);
             }
         }
 

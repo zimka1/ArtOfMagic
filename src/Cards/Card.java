@@ -16,9 +16,9 @@ public class Card {
 
     private int Whose = 0;
 
-    private int hp;
+    private int hp = 0;
     private Card_Weapon weapon = null;
-    private int numberOfUses;
+    private int numberOfUses = 0;
 
     public Card(String name, int manaCost, int power) {
         setName(name);

@@ -23,6 +23,10 @@ public class CardView extends StackPane {
         initializeCardUI();
     }
 
+    public Card getCard() {
+        return card;
+    }
+
     private void initializeCardUI() {
         // Фон карты
         Rectangle background = new Rectangle(100, 130);
@@ -45,8 +49,8 @@ public class CardView extends StackPane {
         powerLabel.setFont(new Font("Arial", 10));
         StackPane.setAlignment(powerLabel, Pos.BOTTOM_LEFT);
 
-        if (card.getHp() != 0){
-            HPLabel = new Label(Integer.toString(card.getHp()));
+        if (card.getNowHP() != 0){
+            HPLabel = new Label(Integer.toString(card.getNowHP()));
             HPLabel.setFont(new Font("Arial", 10));
             StackPane.setAlignment(HPLabel, Pos.BOTTOM_RIGHT);
         }
@@ -61,11 +65,8 @@ public class CardView extends StackPane {
         artwork = new ImageView();
         artwork.setFitWidth(70);
         artwork.setFitHeight(100);
-        // В реальном приложении загрузите изображение карты
-        // artwork.setImage(new Image(card.getImagePath()));
 
-        // Добавление всех элементов на панель карты
-        if (card.getHp() != 0){
+        if (card.getNowHP() != 0){
             this.getChildren().addAll(background, nameLabel, manaCostLabel, powerLabel, HPLabel, artwork);
         }
         else if (card.getNumberOfUses() != 0){

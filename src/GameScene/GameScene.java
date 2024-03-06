@@ -11,20 +11,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class GameScene extends Application {
 
-    private Board playerBoard = new Board();
-    private Board opponentBoard = new Board();
-    private Player player = new Player();
-    private Player opponent = new Player();
+    private Board playerBoard = new Board(1);
+    private Board opponentBoard = new Board(2);
+    private Player player = new Player(1);
+    private Player opponent = new Player(2);
 
     private HBox playerHandContainer = new HBox(10);
     private HBox opponentHandContainer = new HBox(10);
     private HBox playerBoardContainer = new HBox(10);
     private HBox opponentBoardContainer = new HBox(10);
+    private HBox playerGraveyardContainer = new HBox(10);
+    private HBox opponentGraveyardContainer = new HBox(10);
     private VBox rightSideContainer = new VBox(20);
+    private VBox leftSideContainer = new VBox(100);
 
-    @Override
+    private CardView selectedCardForAttack = null;
+
     public void start(Stage primaryStage) {
         setupGame();
 
@@ -33,6 +39,7 @@ public class GameScene extends Application {
         opponentHandContainer.setAlignment(Pos.CENTER);
         playerBoardContainer.setAlignment(Pos.CENTER);
         opponentBoardContainer.setAlignment(Pos.CENTER);
+
 
         Button playerDeckButton = new Button("Player's deck");
         playerDeckButton.setOnAction(e -> drawCard(player, playerBoard));
@@ -43,10 +50,15 @@ public class GameScene extends Application {
         rightSideContainer.getChildren().addAll(opponentDeckButton, playerDeckButton);
         rightSideContainer.setAlignment(Pos.CENTER_RIGHT);
 
+        leftSideContainer.getChildren().addAll(opponentGraveyardContainer, playerGraveyardContainer);
+        leftSideContainer.setAlignment(Pos.CENTER_LEFT);
+
+
         playerHandContainer.setSpacing(5);
         opponentHandContainer.setSpacing(5);
 
         root.setRight(rightSideContainer);
+        root.setLeft(leftSideContainer);
         root.setBottom(playerHandContainer);
         root.setTop(opponentHandContainer);
         root.setCenter(playerBoardContainer);
@@ -64,13 +76,14 @@ public class GameScene extends Application {
     }
 
     private void setupGame() {
-        playerBoard.getDeck().addCard(CardLibrary.BattleAxe);
-        playerBoard.getDeck().addCard(CardLibrary.DarkLance);
-        playerBoard.getDeck().addCard(CardLibrary.EarthGiant);
-        playerBoard.getDeck().addCard(CardLibrary.GuardianOfTheForest);
-        opponentBoard.getDeck().addCard(CardLibrary.ArcaneBlast);
-        opponentBoard.getDeck().addCard(CardLibrary.BattleAxe);
-        opponentBoard.getDeck().addCard(CardLibrary.DarkLance);
+        playerBoard.getDeck().addCard(CardLibrary.players_BattleAxe);
+        playerBoard.getDeck().addCard(CardLibrary.players_DarkLance);
+        playerBoard.getDeck().addCard(CardLibrary.players_EarthGiant);
+        playerBoard.getDeck().addCard(CardLibrary.players_GuardianOfTheForest);
+        opponentBoard.getDeck().addCard(CardLibrary.opponents_ArcaneBlast);
+        opponentBoard.getDeck().addCard(CardLibrary.opponents_BattleAxe);
+        opponentBoard.getDeck().addCard(CardLibrary.opponents_DarkLance);
+        opponentBoard.getDeck().addCard(CardLibrary.opponents_EarthGiant);
     }
 
     private void drawCard(Player player, Board board) {
@@ -105,21 +118,46 @@ public class GameScene extends Application {
         }
     }
     private void updateBoardDisplay(Board board) {
-        if (board == this.playerBoard) {
-            playerBoardContainer.getChildren().clear();
-            for (Card card : board.getBoard()) {
-                CardView cardView = new CardView(card);
-                playerBoardContainer.getChildren().add(cardView);
-            }
-        } else {
-            opponentBoardContainer.getChildren().clear();
-            for (Card card : board.getBoard()) {
-                CardView cardView = new CardView(card);
-                opponentBoardContainer.getChildren().add(cardView);
-            }
+        HBox currentContainer = board == this.playerBoard ? playerBoardContainer : opponentBoardContainer;
+        currentContainer.getChildren().clear();
+        for (Card card : board.getBoard()) {
+            CardView cardView = new CardView(card);
+            currentContainer.getChildren().add(cardView);
+            cardView.setOnMouseClicked(e -> {
+                if (selectedCardForAttack == null) {
+                    selectedCardForAttack = cardView;
+                } else {
+                    if ((selectedCardForAttack.getCard().getWhose() == card.getWhose()) && (Objects.equals(selectedCardForAttack.getCard().getID(), card.getID()))) {
+                        System.out.println(selectedCardForAttack.getCard().getID() + " " + card.getID());
+                        selectedCardForAttack = null;
+                        return;
+                    }
+                    Board attackerBoard = selectedCardForAttack.getCard().getWhose() == this.player.getWhose() ? this.playerBoard : this.opponentBoard;
+                    Board defenderBoard = card.getWhose() == this.player.getWhose() ? this.playerBoard : this.opponentBoard;
+                    selectedCardForAttack.getCard().attackCard(card, attackerBoard, defenderBoard);
+                    selectedCardForAttack = null;
+                    updateBoardDisplay(this.playerBoard);
+                    updateBoardDisplay(this.opponentBoard);
+                    playerBoard.getGraveyard().DisplayGraveyard();
+                    updateGraveyardDisplay(this.opponentBoard);
+                    updateGraveyardDisplay(this.playerBoard);
+                }
+            });
         }
-
     }
+
+    private void updateGraveyardDisplay(Board board) {
+        // Допустим, у Board есть метод getGraveyard(), который возвращает список карт на кладбище
+        HBox currentContainer = board == this.playerBoard ? playerGraveyardContainer : opponentGraveyardContainer;
+        currentContainer.getChildren().clear();
+        if (!board.getGraveyard().getCards().isEmpty()) {
+
+            Card topCard = board.getGraveyard().getCards().getLast();
+            CardView cardView = new CardView(topCard);
+            currentContainer.getChildren().add(cardView);
+        }
+    }
+
 
     public static void main(String[] args) {
         launch(args);

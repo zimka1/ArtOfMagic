@@ -1,6 +1,7 @@
 package GameBoard;
 
 import Cards.Card;
+import Cards.TypeOfCard.Card_Minion;
 
 import java.util.ArrayList;
 import java.util.Iterator;

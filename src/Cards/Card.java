@@ -15,16 +15,18 @@ public class Card {
     private String ID;
 
     private int Whose = 0;
-
+    private int numberBoard = 1;
     private int hp = 0;
+    private int nowHP = hp;
     private Card_Weapon weapon = null;
     private int numberOfUses = 0;
 
-    public Card(String name, int manaCost, int power) {
+    public Card(String name, int manaCost, int power, int whose) {
         setName(name);
         setManaCost(manaCost);
         setPower(power);
-        setID(generateSHA256Hash(name + manaCost + power));
+        setWhose(whose);
+        setID(generateSHA256Hash(name + manaCost + power + whose));
     }
     private String generateSHA256Hash(String data) {
         try {
@@ -42,7 +44,6 @@ public class Card {
         }
     }
 
-
     public String getName(){
         return this.name;
     }
@@ -57,6 +58,8 @@ public class Card {
     }
     public Card_Weapon getWeapon(){return weapon;}
     public int getWhose(){return Whose;}
+    public int getNowHP() {return nowHP;}
+    public int getNumberBoard(){return numberBoard;}
 
 
 
@@ -77,7 +80,12 @@ public class Card {
     }
     public void setWhose(int whoTake) {
         this.Whose = whoTake;
-        setID(generateSHA256Hash(name + manaCost + power + whoTake));
+    }
+    public void setNowHP(){
+        this.nowHP = this.hp;
+    }
+    public void setNumberBoard(int numberBoard){
+        this.setNumberBoard(numberBoard);
     }
     public void removeWeapon(){
         this.weapon = null;
@@ -85,9 +93,41 @@ public class Card {
 
     public void minusNumberOfUses(){ this.numberOfUses--;}
 
-    public void death(Board board, Graveyard graveyard){
+
+    public void takingDamage(int damage){
+        this.nowHP -= damage;
+    }
+    public void attackCard(Card opponents_card, Board yourBoard, Board opponents_Board){
+        if (this.getWeapon() != null){
+            opponents_card.takingDamage(this.getPower() + this.getWeapon().getPower());
+            this.getWeapon().minusNumberOfUses();
+            if (this.getWeapon().getNumberOfUses() <= 0){
+                this.getWeapon().death(yourBoard);
+                this.removeWeapon();
+            }
+        }
+        else{
+            opponents_card.takingDamage(this.getPower());
+        }
+        opponents_card.attackInResponse(this);
+        if (nowHP <= 0){
+            this.death(yourBoard);
+        }
+        if (opponents_card.nowHP <= 0){
+            opponents_card.death(opponents_Board);
+        }
+    }
+    public void attackInResponse(Card opponents_card){
+        opponents_card.takingDamage(this.getPower());
+    }
+    public void restoringValues(){
+        this.nowHP = this.getHp();
+    }
+
+    public void death(Board board){
         board.removeCard(this.getID());
-        graveyard.sendCardToGraveyard(this);
+        this.restoringValues();
+        board.getGraveyard().sendCardToGraveyard(this);
     }
     public void getInfo(){
         System.out.println("Card name: " + this.name + "\nManacost: " + this.manaCost + "\nPower: " + this.power + "\nID" + this.ID + "\n");

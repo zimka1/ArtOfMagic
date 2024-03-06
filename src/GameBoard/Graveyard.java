@@ -16,7 +16,7 @@ public class Graveyard {
     }
     public void DisplayGraveyard(){
         for (Card card : atTheGraveyard){
-            System.out.print("Cards at the cemetery: " + card.getName() + " ");
+            System.out.println("Cards at the cemetery: " + card.getName() + " ");
         }
         System.out.println("\n");
     }

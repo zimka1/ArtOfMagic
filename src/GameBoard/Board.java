@@ -10,16 +10,18 @@ public class Board {
     private Deck deck = new Deck();
     private Graveyard graveyard = new Graveyard();
     private List<Card> onTheBoard;
+    private int whose;
 
-    public Board(){
+    public Board(int whose){
         this.onTheBoard = new ArrayList<>();
+        this.whose = whose;
     }
 
 
     public List<Card> getBoard(){return onTheBoard;}
     public Deck getDeck(){return deck;}
     public Graveyard getGraveyard(){return graveyard;}
-
+    public int getWhose(){return whose;}
     public void putCardOnTable(Card card){
         onTheBoard.add(card);
     }

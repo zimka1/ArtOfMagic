@@ -6,6 +6,7 @@ import GameBoard.Board;
 public class Player {
     private Hand hand = new Hand();
     private int hp = 30;
+    private int nowHP = 30;
     private int whose = 0;
     private int mana = 100;
     private int nowMana = 100;
@@ -17,6 +18,10 @@ public class Player {
         return hand;
     }
     public int getWhose(){return whose;}
+    public int getNowHP() {
+        return nowHP;
+    }
+
     public void putCardOnTable(String ID, Board board){
         Card findedCard = this.hand.findCard(ID);
         if (findedCard.getManaCost() <= this.nowMana){
@@ -27,6 +32,9 @@ public class Player {
         else{
             System.out.println("You don't have enough mana!");
         }
+    }
+    public void takingDamage(int damage){
+        this.nowHP -= damage;
     }
     public void restoringMana(){
         this.nowMana = this.mana;

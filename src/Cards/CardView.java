@@ -61,7 +61,6 @@ public class CardView extends StackPane {
         }
 
 
-        // Изображение карты (заглушка)
         artwork = new ImageView();
         artwork.setFitWidth(70);
         artwork.setFitHeight(100);

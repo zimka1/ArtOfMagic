@@ -1,14 +1,17 @@
 package GameScene;
 import Cards.*;
+import Players.PlayerCardView;
 import GameBoard.*;
 import Players.*;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -20,6 +23,8 @@ public class GameScene extends Application {
     private Player player = new Player(1);
     private Player opponent = new Player(2);
 
+    PlayerCardView playerCardView = new PlayerCardView("Player 1", player.getNowHP());
+    PlayerCardView opponentCardView = new PlayerCardView("Player 2", opponent.getNowHP());
     private HBox playerHandContainer = new HBox(10);
     private HBox opponentHandContainer = new HBox(10);
     private HBox playerBoardContainer = new HBox(10);
@@ -27,7 +32,10 @@ public class GameScene extends Application {
     private HBox playerGraveyardContainer = new HBox(10);
     private HBox opponentGraveyardContainer = new HBox(10);
     private VBox rightSideContainer = new VBox(20);
-    private VBox leftSideContainer = new VBox(100);
+    private VBox leftSideContainer = new VBox(20);
+
+    private VBox topSideContainer = new VBox(20);
+    private VBox bottomSideContainer = new VBox(20);
 
     private CardView selectedCardForAttack = null;
 
@@ -57,11 +65,15 @@ public class GameScene extends Application {
         playerHandContainer.setSpacing(5);
         opponentHandContainer.setSpacing(5);
 
+
+        topSideContainer.getChildren().addAll(opponentCardView, opponentHandContainer);
+        bottomSideContainer.getChildren().addAll(playerHandContainer, playerCardView);
+
+
         root.setRight(rightSideContainer);
         root.setLeft(leftSideContainer);
-        root.setBottom(playerHandContainer);
-        root.setTop(opponentHandContainer);
-        root.setCenter(playerBoardContainer);
+        root.setBottom(bottomSideContainer);
+        root.setTop(topSideContainer);
 
         VBox centerContainer = new VBox(5);
         centerContainer.setAlignment(Pos.CENTER);
@@ -69,9 +81,20 @@ public class GameScene extends Application {
         root.setCenter(centerContainer);
         centerContainer.setSpacing(20);
 
-        Scene scene = new Scene(root, 1000, 800);
+        String borderStyle = "-fx-border-color: black; " +
+                "-fx-border-width: 1; " +
+                "-fx-border-style: solid; " +
+                "-fx-padding: 5;";
+
+        playerBoardContainer.setStyle(borderStyle);
+        opponentBoardContainer.setStyle(borderStyle);
+        playerBoardContainer.setMaxWidth(700);
+        opponentBoardContainer.setMaxWidth(700);
+
+        Scene scene = new Scene(root, 1200, 1000);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Art Of Magic");
+        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 
@@ -86,13 +109,17 @@ public class GameScene extends Application {
         opponentBoard.getDeck().addCard(CardLibrary.opponents_EarthGiant);
     }
 
+
     private void drawCard(Player player, Board board) {
         player.putCardInHand(board.getDeck());
         updateHandDisplay(player, board);
     }
 
+    private void updatePlayerViews() {
+        playerCardView.updateHP(player.getNowHP());
+        opponentCardView.updateHP(opponent.getNowHP());
+    }
     private void updateHandDisplay(Player player, Board board) {
-        // Обновляем отображение рук игрока и противника
         if (player == this.player) {
             playerHandContainer.getChildren().clear();
             for (Card card : player.getHand().getCards()) {
@@ -123,15 +150,36 @@ public class GameScene extends Application {
         for (Card card : board.getBoard()) {
             CardView cardView = new CardView(card);
             currentContainer.getChildren().add(cardView);
+            playerCardView.setOnMouseClicked(e -> {
+                if (selectedCardForAttack != null && selectedCardForAttack.getCard().getWhose() != player.getWhose()) {
+                    player.takingDamage(selectedCardForAttack.getCard().getPower());
+                    updatePlayerViews();
+                    selectedCardForAttack.setStyle("");
+                    selectedCardForAttack = null;
+                }
+            });
+
+            opponentCardView.setOnMouseClicked(e -> {
+                if (selectedCardForAttack != null && selectedCardForAttack.getCard().getWhose() != opponent.getWhose()) {
+                    opponent.takingDamage(selectedCardForAttack.getCard().getPower());
+                    updatePlayerViews();
+                    selectedCardForAttack.setStyle("");
+                    selectedCardForAttack = null;
+
+                }
+            });
             cardView.setOnMouseClicked(e -> {
                 if (selectedCardForAttack == null) {
                     selectedCardForAttack = cardView;
+                    selectedCardForAttack.setStyle("-fx-border-color: red; -fx-border-width: 2; -fx-border-style: solid;");
                 } else {
-                    if ((selectedCardForAttack.getCard().getWhose() == card.getWhose()) && (Objects.equals(selectedCardForAttack.getCard().getID(), card.getID()))) {
+                    if ((selectedCardForAttack.getCard().getWhose() == card.getWhose())) {
                         System.out.println(selectedCardForAttack.getCard().getID() + " " + card.getID());
+                        selectedCardForAttack.setStyle("");
                         selectedCardForAttack = null;
                         return;
                     }
+                    System.out.println(selectedCardForAttack.getCard().getWhose() + " " + card.getWhose());
                     Board attackerBoard = selectedCardForAttack.getCard().getWhose() == this.player.getWhose() ? this.playerBoard : this.opponentBoard;
                     Board defenderBoard = card.getWhose() == this.player.getWhose() ? this.playerBoard : this.opponentBoard;
                     selectedCardForAttack.getCard().attackCard(card, attackerBoard, defenderBoard);
@@ -147,7 +195,6 @@ public class GameScene extends Application {
     }
 
     private void updateGraveyardDisplay(Board board) {
-        // Допустим, у Board есть метод getGraveyard(), который возвращает список карт на кладбище
         HBox currentContainer = board == this.playerBoard ? playerGraveyardContainer : opponentGraveyardContainer;
         currentContainer.getChildren().clear();
         if (!board.getGraveyard().getCards().isEmpty()) {

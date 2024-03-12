@@ -1,6 +1,6 @@
 package GameScene;
 import Cards.*;
-import Players.PlayerCardView;
+import Cards.TypeOfCard.*;
 import GameBoard.*;
 import Players.*;
 import javafx.application.Application;
@@ -141,6 +141,7 @@ public class GameScene extends Application {
         player.setNowMana();
         opponent.setNowMana();
         updateManaLabels();
+        updatePlayerViews();
         updateHandDisplay(player, playerBoard);
         updateHandDisplay(opponent, opponentBoard);
         players_move();
@@ -154,6 +155,10 @@ public class GameScene extends Application {
         endTurnButton.setOnAction(e -> {
             isPlayerTurn = !isPlayerTurn;
             System.out.println(isPlayerTurn);
+            if (selectedCardForAttack != null){
+                selectedCardForAttack.getStyleClass().remove("selected");
+            }
+            selectedCardForAttack = null;
             opponents_move();
         });
 
@@ -167,6 +172,10 @@ public class GameScene extends Application {
         endTurnButton.setOnAction(e -> {
             isPlayerTurn = !isPlayerTurn;
             System.out.println(isPlayerTurn);
+            if (selectedCardForAttack != null){
+                selectedCardForAttack.getStyleClass().remove("selected");
+            }
+            selectedCardForAttack = null;
             players_move();
         });
     }
@@ -185,6 +194,55 @@ public class GameScene extends Application {
     }
 
     private void updatePlayerViews() {
+        playerCardView.setOnMouseClicked(e -> {
+            if (selectedCardForAttack != null){
+                if (selectedCardForAttack.getCard().getWeapon() != null){
+                    player.takingDamage(selectedCardForAttack.getCard().getPower() + selectedCardForAttack.getCard().getWeapon().getPower());
+                }
+                else{
+                    player.takingDamage(selectedCardForAttack.getCard().getPower());
+                }
+                if (selectedCardForAttack.getCard() instanceof Card_Spell){
+                    opponent.minusMana(selectedCardForAttack.getCard().getManaCost());
+                    opponent.getHand().removeCard(selectedCardForAttack.getCard().getID());
+                    selectedCardForAttack.getCard().death(opponentBoard);
+                    selectedCardForAttack = null;
+                    updateManaLabels();
+                    updateHandDisplay(opponent, opponentBoard);
+                    updateGraveyardDisplay(opponentBoard);
+                }
+                else{
+                    selectedCardForAttack = null;
+                }
+            }
+            updatePlayerViews();
+            updateBoardDisplay(opponentBoard);
+        });
+        opponentCardView.setOnMouseClicked(e -> {
+            if (selectedCardForAttack != null){
+                if (selectedCardForAttack.getCard().getWeapon() != null){
+                    opponent.takingDamage(selectedCardForAttack.getCard().getPower() + selectedCardForAttack.getCard().getWeapon().getPower());
+                }
+                else{
+                    opponent.takingDamage(selectedCardForAttack.getCard().getPower());
+                }
+                if (selectedCardForAttack.getCard() instanceof Card_Spell){
+                    player.minusMana(selectedCardForAttack.getCard().getManaCost());
+                    player.getHand().removeCard(selectedCardForAttack.getCard().getID());
+                    selectedCardForAttack.getCard().death(playerBoard);
+                    selectedCardForAttack = null;
+                    updateManaLabels();
+                    updateHandDisplay(player, playerBoard);
+                    updateGraveyardDisplay(playerBoard);
+                }
+                else{
+                    selectedCardForAttack = null;
+                }
+            }
+            updatePlayerViews();
+
+            updateBoardDisplay(playerBoard);
+        });
         playerCardView.updateHP(player.getNowHP());
         opponentCardView.updateHP(opponent.getNowHP());
     }
@@ -196,10 +254,19 @@ public class GameScene extends Application {
                 playerHandContainer.getChildren().add(cardView);
                     cardView.setOnMouseClicked(e -> {
                         if (isPlayerTurn) {
-                            player.putCardOnTable(card.getID(), board);
-                            updateBoardDisplay(board);
-                            updateManaLabels();
-                            updateHandDisplay(player, board);
+                            if (card instanceof Card_Spell){
+                                selectCard(cardView);
+                            }
+                            else if (card instanceof Card_Weapon){
+                                selectCard(cardView);
+                            }
+                            else{
+                                player.putCardOnTable(card.getID(), board);
+                                updateBoardDisplay(board);
+                                updateManaLabels();
+                                updateHandDisplay(player, board);
+                            }
+
                         }
                     });
 
@@ -211,10 +278,19 @@ public class GameScene extends Application {
                 opponentHandContainer.getChildren().add(cardView);
                 cardView.setOnMouseClicked(e -> {
                     if (!isPlayerTurn) {
-                        opponent.putCardOnTable(card.getID(), board);
-                        updateBoardDisplay(board);
-                        updateManaLabels();
-                        updateHandDisplay(player, board);
+                        if (card instanceof Card_Spell){
+                            selectCard(cardView);
+                        }
+                        else if (card instanceof Card_Weapon){
+                            selectCard(cardView);
+                        }
+                        else{
+                            opponent.putCardOnTable(card.getID(), board);
+                            updateBoardDisplay(board);
+                            updateManaLabels();
+                            updateHandDisplay(opponent, board);
+                        }
+
                     }
                 });
 
@@ -233,28 +309,56 @@ public class GameScene extends Application {
         HBox currentContainer = board == this.playerBoard ? playerBoardContainer : opponentBoardContainer;
         currentContainer.getChildren().clear();
         for (Card card : board.getBoard()) {
-            CardView cardView = new CardView(card);
+            CardView cardView;
+            if (card.getWeapon() != null){
+                System.out.println(card.getWeapon().getName());
+                cardView = new CardView(card, card.getWeapon());
+            }
+            else{
+                cardView = new CardView(card);
+            }
             currentContainer.getChildren().add(cardView);
             setupCardInteraction(cardView, card);
         }
     }
     private void setupCardInteraction(CardView cardView, Card card) {
         cardView.setOnMouseClicked(e -> {
-            if (isPlayerTurn && card.getWhose() == player.getWhose() && selectedCardForAttack == null) {
-                selectCardForAttack(cardView);
-            } else if (!isPlayerTurn && card.getWhose() == opponent.getWhose() && selectedCardForAttack == null) {
-                selectCardForAttack(cardView);
-            } else if (selectedCardForAttack != null && card.getWhose() != selectedCardForAttack.getCard().getWhose()) {
-                executeAttack(selectedCardForAttack, cardView);
+            if (selectedCardForAttack != null && selectedCardForAttack.getCard() instanceof Card_Weapon){
+                if (selectedCardForAttack != null && card.getWhose() == selectedCardForAttack.getCard().getWhose()) {
+                    if (isPlayerTurn){
+                        player.minusMana(selectedCardForAttack.getCard().getManaCost());
+                    }
+                    else{
+                        opponent.minusMana(selectedCardForAttack.getCard().getManaCost());
+                    }
+                    card.setWeapon(selectedCardForAttack.getCard(), isPlayerTurn ? player.getHand() : opponent.getHand());
+                    updateHandDisplay(isPlayerTurn ? player : opponent, isPlayerTurn ? playerBoard : opponentBoard);
+                    updateBoardDisplay(isPlayerTurn ? playerBoard : opponentBoard);
+                    updateManaLabels();
+                    selectedCardForAttack = null;
+
+                }
             }
+            else{
+                if (isPlayerTurn && card.getWhose() == player.getWhose()) {
+                    selectCard(cardView);
+                } else if (!isPlayerTurn && card.getWhose() == opponent.getWhose()) {
+                    selectCard(cardView);
+                } else if (selectedCardForAttack != null && card.getWhose() != selectedCardForAttack.getCard().getWhose()) {
+                    executeAttack(selectedCardForAttack, cardView);
+                }
+            }
+
         });
     }
-    private void selectCardForAttack(CardView cardView) {
+    private void selectCard(CardView cardView) {
         if (selectedCardForAttack != null) {
             selectedCardForAttack.getStyleClass().remove("selected");
         }
+        System.out.println(selectedCardForAttack != null ? "vybrano" : "nevybrano");
         selectedCardForAttack = cardView;
         selectedCardForAttack.getStyleClass().add("selected");
+        System.out.println(selectedCardForAttack != null ? "vybrano" : "nevybrano");
     }
     private void executeAttack(CardView attacker, CardView target) {
         Board attackerBoard = (attacker.getCard().getWhose() == player.getWhose()) ? this.playerBoard : this.opponentBoard;
@@ -262,12 +366,22 @@ public class GameScene extends Application {
 
         attacker.getCard().attackCard(target.getCard(), attackerBoard, targetBoard);
 
+        if (attacker.getCard() instanceof Card_Spell && attacker.getCard().getWhose() == player.getWhose()){
+            player.minusMana(attacker.getCard().getManaCost());
+            player.getHand().removeCard(attacker.getCard().getID());
+        }
+        if (attacker.getCard() instanceof Card_Spell && attacker.getCard().getWhose() == opponent.getWhose()){
+            opponent.minusMana(attacker.getCard().getManaCost());
+            opponent.getHand().removeCard(attacker.getCard().getID());
+        }
         attacker.getStyleClass().remove("selected");
         selectedCardForAttack = null;
 
-
+        updateManaLabels();
         updateBoardDisplay(this.playerBoard);
         updateBoardDisplay(this.opponentBoard);
+        updateHandDisplay(this.player, this.playerBoard);
+        updateHandDisplay(this.opponent, this.opponentBoard);
         updateGraveyardDisplay(this.playerBoard);
         updateGraveyardDisplay(this.opponentBoard);
         updatePlayerViews();

@@ -18,7 +18,7 @@ public class Card {
     private int numberBoard = 1;
     private int hp = 0;
     private int nowHP = hp;
-    private Card_Weapon weapon = null;
+    private Card weapon = null;
     private int numberOfUses = 0;
 
     public Card(String name, int manaCost, int power, int whose) {
@@ -56,7 +56,7 @@ public class Card {
     public int getNumberOfUses() {
         return numberOfUses;
     }
-    public Card_Weapon getWeapon(){return weapon;}
+    public Card getWeapon(){return weapon;}
     public int getWhose(){return Whose;}
     public int getNowHP() {return nowHP;}
     public int getNumberBoard(){return numberBoard;}
@@ -74,7 +74,7 @@ public class Card {
     public void setManaCost(int manaCost){this.manaCost = manaCost;}
     public void setPower(int power){this.power = power;}
     public void setNumberOfUses(int numberOfUses){this.numberOfUses = numberOfUses;}
-    public void setWeapon(Card_Weapon weapon, Hand hand){
+    public void setWeapon(Card weapon, Hand hand){
         this.weapon = weapon;
         hand.removeCard(weapon.getID());
     }
@@ -99,6 +99,7 @@ public class Card {
     }
     public void attackCard(Card opponents_card, Board yourBoard, Board opponents_Board){
         if (this.getWeapon() != null){
+            System.out.println(this.getWeapon().getPower());
             opponents_card.takingDamage(this.getPower() + this.getWeapon().getPower());
             this.getWeapon().minusNumberOfUses();
             if (this.getWeapon().getNumberOfUses() <= 0){
@@ -118,7 +119,12 @@ public class Card {
         }
     }
     public void attackInResponse(Card opponents_card){
-        opponents_card.takingDamage(this.getPower());
+        if (this.weapon != null){
+            opponents_card.takingDamage(this.getPower() + this.weapon.getPower());
+        }
+        else{
+            opponents_card.takingDamage(this.getPower());
+        }
     }
     public void restoringValues(){
         this.nowHP = this.getHp();

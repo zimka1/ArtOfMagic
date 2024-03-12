@@ -35,6 +35,7 @@ public class Player {
         this.mana += 1;
     }
 
+    public void minusMana(int mana){this.nowMana -= mana;}
     public void putCardOnTable(String ID, Board board){
         Card findedCard = this.hand.findCard(ID);
         if (findedCard.getManaCost() <= this.nowMana){
@@ -48,9 +49,6 @@ public class Player {
     }
     public void takingDamage(int damage){
         this.hp -= damage;
-    }
-    public void restoringMana(){
-        this.nowMana = this.mana;
     }
     public void putCardInHand(Deck deck) {
         this.hand.takeCard(deck);

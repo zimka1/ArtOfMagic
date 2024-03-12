@@ -11,10 +11,12 @@ import javafx.scene.text.Font;
 
 public class CardView extends StackPane {
     private Card card;
+    private Card weapon;
     private Label nameLabel;
     private Label manaCostLabel;
     private Label powerLabel;
     private Label HPLabel;
+    private Label weaponLabel;
     private Label NumberOfUsesLabel;
     private ImageView artwork;
 
@@ -22,10 +24,16 @@ public class CardView extends StackPane {
         this.card = card;
         initializeCardUI();
     }
+    public CardView(Card card, Card weapon) {
+        this.card = card;
+        this.weapon = weapon;
+        initializeCardUI();
+    }
 
     public Card getCard() {
         return card;
     }
+    public Card getWeapon(){return weapon;}
 
     private void initializeCardUI() {
         // Фон карты
@@ -49,6 +57,13 @@ public class CardView extends StackPane {
         powerLabel.setFont(new Font("Arial", 10));
         StackPane.setAlignment(powerLabel, Pos.BOTTOM_LEFT);
 
+        if (weapon != null){
+            System.out.println(weapon.getName());
+            weaponLabel = new Label(weapon.getName());
+            weaponLabel.setFont(new Font("Arial", 10));
+            StackPane.setAlignment(weaponLabel, Pos.CENTER);
+        }
+
         if (card.getNowHP() != 0){
             HPLabel = new Label(Integer.toString(card.getNowHP()));
             HPLabel.setFont(new Font("Arial", 10));
@@ -66,7 +81,13 @@ public class CardView extends StackPane {
         artwork.setFitHeight(100);
 
         if (card.getNowHP() != 0){
-            this.getChildren().addAll(background, nameLabel, manaCostLabel, powerLabel, HPLabel, artwork);
+            if (weapon != null){
+                this.getChildren().addAll(background, nameLabel, manaCostLabel, powerLabel, HPLabel, weaponLabel, artwork);
+
+            }
+            else{
+                this.getChildren().addAll(background, nameLabel, manaCostLabel, powerLabel, HPLabel, artwork);
+            }
         }
         else if (card.getNumberOfUses() != 0){
             this.getChildren().addAll(background, nameLabel, manaCostLabel, powerLabel, NumberOfUsesLabel, artwork);

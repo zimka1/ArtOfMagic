@@ -1,5 +1,6 @@
 package Players;
 
+import Cards.Card;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -18,6 +19,7 @@ public class PlayerCardView extends StackPane {
         this.hp = hp;
         initializeUI();
     }
+
 
     private void initializeUI() {
         // Фон карты игрока

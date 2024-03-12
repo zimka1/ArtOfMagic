@@ -6,9 +6,8 @@ import GameBoard.Board;
 public class Player {
     private Hand hand = new Hand();
     private int hp = 30;
-    private int nowHP = 30;
     private int whose = 0;
-    private int mana = 100;
+    private int mana = 10;
     private int nowMana = 100;
 
     public Player (int whose){
@@ -19,7 +18,21 @@ public class Player {
     }
     public int getWhose(){return whose;}
     public int getNowHP() {
-        return nowHP;
+        return hp;
+    }
+    public int getNowMana() {
+        return nowMana;
+    }
+    public int getMana(){
+        return mana;
+    }
+
+    public void setNowMana(){
+        this.nowMana = mana;
+    }
+
+    public void plusMana(){
+        this.mana += 1;
     }
 
     public void putCardOnTable(String ID, Board board){
@@ -34,7 +47,7 @@ public class Player {
         }
     }
     public void takingDamage(int damage){
-        this.nowHP -= damage;
+        this.hp -= damage;
     }
     public void restoringMana(){
         this.nowMana = this.mana;

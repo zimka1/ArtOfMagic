@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 public class GameScene extends Application {
@@ -140,6 +141,7 @@ public class GameScene extends Application {
         drawInitialCards();
         player.setNowMana();
         opponent.setNowMana();
+        restoringValues(playerBoard, opponentBoard);
         updateManaLabels();
         updatePlayerViews();
         updateHandDisplay(player, playerBoard);
@@ -147,7 +149,18 @@ public class GameScene extends Application {
         players_move();
     }
 
+    void restoringValues(Board playerBoard, Board opponentBoard){
+        for (Iterator<Card> iterator = playerBoard.getBoard().iterator(); iterator.hasNext();){
+            Card card = iterator.next();
+            card.setAlreadyAttacked(0);
+        }
+        for (Iterator<Card> iterator = opponentBoard.getBoard().iterator(); iterator.hasNext();){
+            Card card = iterator.next();
+            card.setAlreadyAttacked(0);
+        }
+    }
     private void players_move(){
+        restoringValues(playerBoard, opponentBoard);
         drawCard(player, playerBoard);
         player.plusMana();
         player.setNowMana();
@@ -165,6 +178,7 @@ public class GameScene extends Application {
 
     }
     private void opponents_move(){
+        restoringValues(playerBoard, opponentBoard);
         drawCard(opponent, opponentBoard);
         opponent.plusMana();
         opponent.setNowMana();
@@ -202,6 +216,7 @@ public class GameScene extends Application {
                 else{
                     player.takingDamage(selectedCardForAttack.getCard().getPower());
                 }
+                selectedCardForAttack.getCard().setAlreadyAttacked(1);
                 if (selectedCardForAttack.getCard() instanceof Card_Spell){
                     opponent.minusMana(selectedCardForAttack.getCard().getManaCost());
                     opponent.getHand().removeCard(selectedCardForAttack.getCard().getID());
@@ -226,6 +241,7 @@ public class GameScene extends Application {
                 else{
                     opponent.takingDamage(selectedCardForAttack.getCard().getPower());
                 }
+                selectedCardForAttack.getCard().setAlreadyAttacked(1);
                 if (selectedCardForAttack.getCard() instanceof Card_Spell){
                     player.minusMana(selectedCardForAttack.getCard().getManaCost());
                     player.getHand().removeCard(selectedCardForAttack.getCard().getID());
@@ -340,9 +356,9 @@ public class GameScene extends Application {
                 }
             }
             else{
-                if (isPlayerTurn && card.getWhose() == player.getWhose()) {
+                if (isPlayerTurn && card.getWhose() == player.getWhose() && card.getAlreadyAttacked() == 0) {
                     selectCard(cardView);
-                } else if (!isPlayerTurn && card.getWhose() == opponent.getWhose()) {
+                } else if (!isPlayerTurn && card.getWhose() == opponent.getWhose() && card.getAlreadyAttacked() == 0) {
                     selectCard(cardView);
                 } else if (selectedCardForAttack != null && card.getWhose() != selectedCardForAttack.getCard().getWhose()) {
                     executeAttack(selectedCardForAttack, cardView);

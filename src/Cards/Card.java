@@ -14,6 +14,7 @@ public class Card {
     private int power;
     private String ID;
 
+    private int alreadyAttacked = 0;
     private int Whose = 0;
     private int numberBoard = 1;
     private int hp = 0;
@@ -60,7 +61,7 @@ public class Card {
     public int getWhose(){return Whose;}
     public int getNowHP() {return nowHP;}
     public int getNumberBoard(){return numberBoard;}
-
+    public int getAlreadyAttacked(){return alreadyAttacked;}
 
 
 
@@ -92,6 +93,7 @@ public class Card {
     }
 
     public void minusNumberOfUses(){ this.numberOfUses--;}
+    public void setAlreadyAttacked(int flag){alreadyAttacked = flag;}
 
 
     public void takingDamage(int damage){
@@ -110,6 +112,7 @@ public class Card {
         else{
             opponents_card.takingDamage(this.getPower());
         }
+        this.alreadyAttacked = 1;
         opponents_card.attackInResponse(this);
         if (nowHP <= 0){
             this.death(yourBoard);

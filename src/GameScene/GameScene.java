@@ -16,23 +16,27 @@ import javafx.stage.Stage;
 
 
 public class GameScene extends Application {
-
-
     private GameManager gameManager = new GameManager(this);
 
     private Button playerDeckButton;
     private Button opponentDeckButton;
 
     private Button endTurnButton;
-    PlayerCardView playerCardView = new PlayerCardView("Player 1", gameManager.getPlayer().getNowHP());
-    PlayerCardView opponentCardView = new PlayerCardView("Player 2", gameManager.getOpponent().getNowHP());
+
+    private PlayerCardView playerCardView = new PlayerCardView("Player 1", gameManager.getPlayer().getNowHP());
+    private PlayerCardView opponentCardView = new PlayerCardView("Player 2", gameManager.getOpponent().getNowHP());
+
     private HBox playerHandContainer = new HBox(10);
     private HBox opponentHandContainer = new HBox(10);
+
     private HBox playerBoardContainer = new HBox(10);
     private HBox opponentBoardContainer = new HBox(10);
+
     private HBox playerGraveyardContainer = new HBox(10);
     private HBox opponentGraveyardContainer = new HBox(10);
+
     private VBox decksContainer = new VBox(20);
+
     private VBox leftSideContainer = new VBox(20);
     private VBox rightSideContainer = new VBox(20);
 
@@ -117,7 +121,7 @@ public class GameScene extends Application {
         updatePlayerViews();
         updateHandDisplay(gameManager.getPlayer(), gameManager.getPlayerBoard());
         updateHandDisplay(gameManager.getOpponent(), gameManager.getOpponentBoard());
-        gameManager.players_move(endTurnButton);
+        gameManager.startTurn(endTurnButton);
     }
 
     public void updatePlayerViews() {
@@ -143,7 +147,7 @@ public class GameScene extends Application {
                 CardView cardView = new CardView(card);
                 playerHandContainer.getChildren().add(cardView);
                 cardView.setOnMouseClicked(e -> {
-                    if (gameManager.isPlayerTurn()){
+                    if (gameManager.getPlayerTurn()){
                         gameManager.clickedOnHand(cardView, player, board);
                     }
                 });
@@ -155,7 +159,7 @@ public class GameScene extends Application {
                 CardView cardView = new CardView(card);
                 opponentHandContainer.getChildren().add(cardView);
                 cardView.setOnMouseClicked(e -> {
-                    if (!gameManager.isPlayerTurn()) {
+                    if (!gameManager.getPlayerTurn()) {
                         gameManager.clickedOnHand(cardView, gameManager.getOpponent(), gameManager.getOpponentBoard());
                     }
                 });

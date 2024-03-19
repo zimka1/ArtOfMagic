@@ -7,7 +7,9 @@ import Cards.TypeOfCard.Card_Spell;
 import Cards.TypeOfCard.Card_Weapon;
 import GameBoard.Board;
 import GameScene.GameScene;
+import Players.GameState;
 import Players.Player;
+import Players.PlayerTurnState;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -24,6 +26,7 @@ public class GameManager {
 
     private CardView selectedCardForAttack = null;
 
+    private GameState currentState;
 
     public GameManager(GameScene gameScene) {
         this.gameScene = gameScene;
@@ -32,6 +35,7 @@ public class GameManager {
         this.player = new Player(1);
         this.opponent = new Player(2);
         this.isPlayerTurn = true;
+        this.currentState = new PlayerTurnState();
     }
 
     // getters
@@ -51,10 +55,19 @@ public class GameManager {
         return opponent;
     }
 
-    public boolean isPlayerTurn() {
+    public boolean getPlayerTurn() {
         return isPlayerTurn;
     }
 
+    public void setState(GameState state) {
+        this.currentState = state;
+    }
+
+
+
+    public GameState getCurrentState() {
+        return currentState;
+    }
     public CardView getSelectedCardForAttack() {
         return selectedCardForAttack;
     }
@@ -86,6 +99,14 @@ public class GameManager {
 
 
 
+    public void startTurn(Button endTurnButton) {
+        currentState.handleStartOfTurn(this, endTurnButton);
+    }
+
+    public void changeTurn(Button endTurnButton) {
+        currentState.changeTurn(this, endTurnButton);
+    }
+
 
     public void setupGame() {
         playerBoard.getDeck().addCard(CardLibrary.players_BattleAxe);
@@ -116,38 +137,6 @@ public class GameManager {
             Card card = iterator.next();
             card.setAlreadyAttacked(0);
         }
-    }
-    public void players_move(Button endTurnButton){
-        restoringValues(playerBoard, opponentBoard);
-        drawCard(player, playerBoard);
-        player.plusMana();
-        player.setNowMana();
-        endTurnButton.setOnAction(e -> {
-            isPlayerTurn = !isPlayerTurn;
-            System.out.println(isPlayerTurn);
-            if (selectedCardForAttack != null){
-                selectedCardForAttack.getStyleClass().remove("selected");
-            }
-            selectedCardForAttack = null;
-            opponents_move(endTurnButton);
-        });
-
-
-    }
-    public void opponents_move(Button endTurnButton){
-        restoringValues(playerBoard, opponentBoard);
-        drawCard(opponent, opponentBoard);
-        opponent.plusMana();
-        opponent.setNowMana();
-        endTurnButton.setOnAction(e -> {
-            isPlayerTurn = !isPlayerTurn;
-            System.out.println(isPlayerTurn);
-            if (selectedCardForAttack != null){
-                selectedCardForAttack.getStyleClass().remove("selected");
-            }
-            selectedCardForAttack = null;
-            players_move(endTurnButton);
-        });
     }
 
     public void drawInitialCards() {

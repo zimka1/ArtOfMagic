@@ -148,7 +148,7 @@ public class GameScene extends Application {
                 playerHandContainer.getChildren().add(cardView);
                 cardView.setOnMouseClicked(e -> {
                     if (gameManager.getPlayerTurn()){
-                        gameManager.clickedOnHand(cardView, player, board);
+                        gameManager.clickedOnHand(cardView, gameManager.getPlayer(), gameManager.getPlayerBoard(), gameManager.getPlayer().getNowMana());
                     }
                 });
 
@@ -160,7 +160,7 @@ public class GameScene extends Application {
                 opponentHandContainer.getChildren().add(cardView);
                 cardView.setOnMouseClicked(e -> {
                     if (!gameManager.getPlayerTurn()) {
-                        gameManager.clickedOnHand(cardView, gameManager.getOpponent(), gameManager.getOpponentBoard());
+                        gameManager.clickedOnHand(cardView, gameManager.getOpponent(), gameManager.getOpponentBoard(), gameManager.getOpponent().getNowMana());
                     }
                 });
 
@@ -188,7 +188,7 @@ public class GameScene extends Application {
                 cardView = new CardView(card);
             }
             currentContainer.getChildren().add(cardView);
-            gameManager.setupCardInteraction(cardView, card);
+            gameManager.setupCardInteraction(cardView);
         }
     }
     public void updateGraveyardDisplay(Board board) {

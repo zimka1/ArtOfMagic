@@ -7,7 +7,7 @@ public class OpponentTurnState implements GameState {
     @Override
     public void handleStartOfTurn(GameManager context, Button endTurnButton) {
         context.restoringValues(context.getPlayerBoard(), context.getOpponentBoard());
-        context.drawCard(context.getOpponent(), context.getOpponentBoard());
+        context.drawCardForPlayer(context.getOpponent(), context.getOpponentBoard());
         context.getOpponent().plusMana();
         context.getOpponent().setNowMana();
         endTurnButton.setOnAction(e -> {

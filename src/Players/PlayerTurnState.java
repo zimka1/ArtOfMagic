@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 public class PlayerTurnState implements GameState {
     public void handleStartOfTurn(GameManager context, Button endTurnButton) {
         context.restoringValues(context.getPlayerBoard(), context.getOpponentBoard());
-        context.drawCard(context.getPlayer(), context.getPlayerBoard());
+        context.drawCardForPlayer(context.getPlayer(), context.getPlayerBoard());
         context.getPlayer().plusMana();
         context.getPlayer().setNowMana();
         endTurnButton.setOnAction(e -> {

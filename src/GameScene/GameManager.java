@@ -183,9 +183,9 @@ public class GameManager {
             }
             else{
                 if (isPlayerTurn && card.getWhose() == player.getWhose() && card.getAlreadyAttacked() == 0) {
-                    selectCard(cardView);
+                    selectCard(cardView, player.getNowMana());
                 } else if (!isPlayerTurn && card.getWhose() == opponent.getWhose() && card.getAlreadyAttacked() == 0) {
-                    selectCard(cardView);
+                    selectCard(cardView, opponent.getNowMana());
                 } else if (selectedCardForAttack != null && card.getWhose() != selectedCardForAttack.getCard().getWhose()) {
                     executeAttack(selectedCardForAttack, cardView);
                 }
@@ -193,16 +193,14 @@ public class GameManager {
 
         });
     }
-    public void selectCard(CardView cardView) {
+    public void selectCard(CardView cardView, int mana) {
         if (selectedCardForAttack != null) {
             selectedCardForAttack.getStyleClass().remove("selected");
             selectedCardForAttack = null;
         }
-        if (cardView.getCard() instanceof Card_Weapon || cardView.getCard() instanceof Card_Spell){
-            if (cardView.getCard().getManaCost() > player.getNowMana()){
-                System.out.println("You don't have enough mana!");
-                return;
-            }
+        if (cardView.getCard().getManaCost() > mana) {
+            System.out.println("You don't have enough mana!");
+            return;
         }
         System.out.println(selectedCardForAttack != null ? "vybrano" : "nevybrano");
         selectedCardForAttack = cardView;
@@ -267,10 +265,10 @@ public class GameManager {
 
     public void clickedOnHand(CardView cardView, Player whichPlayer, Board whoseBoard){
         if (cardView.getCard() instanceof Card_Spell){
-            selectCard(cardView);
+            selectCard(cardView, whichPlayer.getNowMana());
         }
         else if (cardView.getCard() instanceof Card_Weapon){
-            selectCard(cardView);
+            selectCard(cardView, whichPlayer.getNowMana());
         }
         else{
             whichPlayer.putCardOnTable(cardView.getCard().getID(), whoseBoard);

@@ -44,8 +44,6 @@ public class GameScene extends Application {
     private Label opponentManaLabel = new Label();
 
 
-    private boolean isPlayerTurn = true;
-
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
         playerHandContainer.setAlignment(Pos.CENTER);
@@ -145,7 +143,7 @@ public class GameScene extends Application {
                 CardView cardView = new CardView(card);
                 playerHandContainer.getChildren().add(cardView);
                 cardView.setOnMouseClicked(e -> {
-                    if (isPlayerTurn){
+                    if (gameManager.isPlayerTurn()){
                         gameManager.clickedOnHand(cardView, player, board);
                     }
                 });
@@ -157,7 +155,7 @@ public class GameScene extends Application {
                 CardView cardView = new CardView(card);
                 opponentHandContainer.getChildren().add(cardView);
                 cardView.setOnMouseClicked(e -> {
-                    if (!isPlayerTurn) {
+                    if (!gameManager.isPlayerTurn()) {
                         gameManager.clickedOnHand(cardView, gameManager.getOpponent(), gameManager.getOpponentBoard());
                     }
                 });

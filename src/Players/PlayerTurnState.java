@@ -1,27 +1,29 @@
 package Players;
 
 import GameScene.GameManager;
+import GameScene.GameScene;
 import javafx.scene.control.Button;
 
 public class PlayerTurnState implements GameState {
-    public void handleStartOfTurn(GameManager context, Button endTurnButton) {
-        context.restoringValues(context.getPlayerBoard(), context.getOpponentBoard());
-        context.drawCardForPlayer(context.getPlayer(), context.getPlayerBoard());
-        context.getPlayer().plusMana();
-        context.getPlayer().setNowMana();
+    public void handleStartOfTurn(GameManager gameManager, Button endTurnButton) {
+        gameManager.restoringValues(gameManager.getPlayerBoard(), gameManager.getOpponentBoard());
+        gameManager.drawCardForPlayer(gameManager.getPlayer(), gameManager.getPlayerBoard());
+        gameManager.getPlayer().plusMana();
+        gameManager.getPlayer().setNowMana();
+        gameManager.updateMana();
         endTurnButton.setOnAction(e -> {
-            context.setPlayerTurn(!context.getPlayerTurn());
-            if (context.getSelectedCardForAttack() != null){
-                context.getSelectedCardForAttack().getStyleClass().remove("selected");
+            gameManager.setPlayerTurn(!gameManager.getPlayerTurn());
+            if (gameManager.getSelectedCardForAttack() != null){
+                gameManager.getSelectedCardForAttack().getStyleClass().remove("selected");
             }
-            context.setSelectedCardForAttack(null);
-            changeTurn(context, endTurnButton);
+            gameManager.setSelectedCardForAttack(null);
+            changeTurn(gameManager, endTurnButton);
         });
 
     }
 
     public void changeTurn(GameManager context, Button endTurnButton) {
         context.setState(new OpponentTurnState());
-        context.getCurrentState().handleStartOfTurn(context, endTurnButton); // Автоматически обрабатываем начало хода противника
+        context.getCurrentState().handleStartOfTurn(context, endTurnButton);
     }
 }

@@ -53,7 +53,7 @@ public class CardView extends StackPane {
         StackPane.setAlignment(manaCostLabel, Pos.TOP_LEFT);
 
         // Метка с силой карты
-        powerLabel = new Label(Integer.toString(card.getPower()));
+        powerLabel = new Label(Integer.toString(card.getPower() + (card.getWeapon() != null ? card.getWeapon().getPower() : 0)));
         powerLabel.setFont(new Font("Arial", 10));
         StackPane.setAlignment(powerLabel, Pos.BOTTOM_LEFT);
 

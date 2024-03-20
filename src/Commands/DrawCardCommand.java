@@ -17,6 +17,6 @@ public class DrawCardCommand implements GameCommand {
 
     public void execute() {
         player.putCardInHand(board.getDeck());
-        gameScene.updateHandDisplay(player, board);
+        gameScene.updateHandDisplay(player);
     }
 }

@@ -38,7 +38,7 @@ public class AttackPlayerCommand implements GameCommand{
             selectedCardForAttack.getCard().death(attackingBoard);
             selectedCardForAttack = null;
             gameScene.updateManaLabels();
-            gameScene.updateHandDisplay(attackingPlayer, attackingBoard);
+            gameScene.updateHandDisplay(attackingPlayer);
             gameScene.updateGraveyardDisplay(attackingBoard);
         }
         else{

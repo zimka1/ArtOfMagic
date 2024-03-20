@@ -117,11 +117,15 @@ public class GameScene extends Application {
         gameManager.getPlayer().setNowMana();
         gameManager.getOpponent().setNowMana();
         gameManager.restoringValues(gameManager.getPlayerBoard(), gameManager.getOpponentBoard());
+        allUpdatesForBegining();
+        gameManager.startTurn(endTurnButton);
+    }
+
+    public void allUpdatesForBegining(){
         updateManaLabels();
         updatePlayerViews();
-        updateHandDisplay(gameManager.getPlayer(), gameManager.getPlayerBoard());
-        updateHandDisplay(gameManager.getOpponent(), gameManager.getOpponentBoard());
-        gameManager.startTurn(endTurnButton);
+        updateHandDisplay(gameManager.getPlayer());
+        updateHandDisplay(gameManager.getOpponent());
     }
 
     public void updatePlayerViews() {
@@ -140,7 +144,7 @@ public class GameScene extends Application {
         opponentCardView.updateHP(gameManager.getOpponent().getNowHP());
     }
 
-    public void updateHandDisplay(Player player, Board board) {
+    public void updateHandDisplay(Player player) {
         if (player == gameManager.getPlayer()) {
             playerHandContainer.getChildren().clear();
             for (Card card : player.getHand().getCards()) {
@@ -171,7 +175,6 @@ public class GameScene extends Application {
         playerManaLabel.setText(gameManager.getPlayer().getNowMana() + "/" + gameManager.getPlayer().getMana());
         opponentManaLabel.setText(gameManager.getOpponent().getNowMana() + "/" + gameManager.getOpponent().getMana());
 
-        // Настройка внешнего вида меток, если необходимо
         playerManaLabel.setFont(new Font("Arial", 14));
         opponentManaLabel.setFont(new Font("Arial", 14));
     }

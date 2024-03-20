@@ -41,7 +41,7 @@ public class PlayCardCommand implements GameCommand {
             player.putCardOnTable(cardView.getCard().getID(), board);
             gameScene.updateBoardDisplay(board);
             gameScene.updateManaLabels();
-            gameScene.updateHandDisplay(player, board);
+            gameScene.updateHandDisplay(player);
         }
 
     }

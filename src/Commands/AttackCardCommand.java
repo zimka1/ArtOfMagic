@@ -39,8 +39,8 @@ public class AttackCardCommand implements GameCommand{
         gameScene.updateManaLabels();
         gameScene.updateBoardDisplay(gameManager.getPlayerBoard());
         gameScene.updateBoardDisplay(gameManager.getOpponentBoard());
-        gameScene.updateHandDisplay(gameManager.getPlayer(), gameManager.getPlayerBoard());
-        gameScene.updateHandDisplay(gameManager.getOpponent(), gameManager.getOpponentBoard());
+        gameScene.updateHandDisplay(gameManager.getPlayer());
+        gameScene.updateHandDisplay(gameManager.getOpponent());
         gameScene.updateGraveyardDisplay(gameManager.getPlayerBoard());
         gameScene.updateGraveyardDisplay(gameManager.getOpponentBoard());
         gameScene.updatePlayerViews();

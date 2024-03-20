@@ -28,10 +28,11 @@ public class SetupCardInteractionCommand implements GameCommand{
                     gameManager.getOpponent().minusMana(selectedCardForAttack.getCard().getManaCost());
                 }
                 cardView.getCard().setWeapon(selectedCardForAttack.getCard(), gameManager.getPlayerTurn() ? gameManager.getPlayer().getHand() : gameManager.getOpponent().getHand());
-                gameScene.updateHandDisplay(gameManager.getPlayerTurn() ? gameManager.getPlayer() : gameManager.getOpponent(), gameManager.getPlayerTurn() ? gameManager.getPlayerBoard() : gameManager.getOpponentBoard());
+                gameManager.setSelectedCardForAttack(null);
+                gameScene.updateHandDisplay(gameManager.getPlayerTurn() ? gameManager.getPlayer() : gameManager.getOpponent());
                 gameScene.updateBoardDisplay(gameManager.getPlayerTurn() ? gameManager.getPlayerBoard() : gameManager.getOpponentBoard());
                 gameScene.updateManaLabels();
-                selectedCardForAttack = null;
+
 
             }
         }

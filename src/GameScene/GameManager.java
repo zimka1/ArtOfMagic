@@ -3,8 +3,6 @@ package GameScene;
 import Cards.Card;
 import Cards.CardLibrary;
 import Cards.CardView;
-import Cards.TypeOfCard.Card_Spell;
-import Cards.TypeOfCard.Card_Weapon;
 import Commands.*;
 import GameBoard.Board;
 import Players.GameState;
@@ -37,32 +35,25 @@ public class GameManager {
     }
 
     // getters
+
     public Board getPlayerBoard() {
         return playerBoard;
     }
-
     public Board getOpponentBoard() {
         return opponentBoard;
     }
-
     public Player getPlayer() {
         return player;
     }
-
     public Player getOpponent() {
         return opponent;
     }
-
     public boolean getPlayerTurn() {
         return isPlayerTurn;
     }
-
     public void setState(GameState state) {
         this.currentState = state;
     }
-
-
-
     public GameState getCurrentState() {
         return currentState;
     }
@@ -71,21 +62,6 @@ public class GameManager {
     }
 
     // Setters
-    public void setPlayerBoard(Board playerBoard) {
-        this.playerBoard = playerBoard;
-    }
-
-    public void setOpponentBoard(Board opponentBoard) {
-        this.opponentBoard = opponentBoard;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public void setOpponent(Player opponent) {
-        this.opponent = opponent;
-    }
 
     public void setPlayerTurn(boolean playerTurn) {
         isPlayerTurn = playerTurn;
@@ -116,7 +92,9 @@ public class GameManager {
 
     }
 
-
+    public void updateMana(){
+        gameScene.updateManaLabels();
+    }
     private void addCardsToDeck(Board board, Card... cards) {
         for (Card card : cards) {
             board.getDeck().addCard(card);
@@ -134,7 +112,6 @@ public class GameManager {
             executeCommand(attackPlayerCommand);
         }
     }
-    
 
     public void setupGame() {
         addCardsToDeck(playerBoard,
@@ -189,10 +166,8 @@ public class GameManager {
         if (selectedCardForAttack != null) {
             selectedCardForAttack.getStyleClass().remove("selected");
         }
-//        System.out.println(selectedCardForAttack != null ? "vybrano" : "nevybrano");
         selectedCardForAttack = cardView;
         selectedCardForAttack.getStyleClass().add("selected");
-//        System.out.println(selectedCardForAttack != null ? "vybrano" : "nevybrano");
     }
 
 

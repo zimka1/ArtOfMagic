@@ -17,6 +17,9 @@ public class Deck {
         cards.add(card);
     }
 
+    public List<Card> getCards(){
+        return cards;
+    }
     public void removeCard(String ID){
         for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext(); ) {
             Card card = iterator.next();

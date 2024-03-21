@@ -10,7 +10,7 @@ import Players.Player;
 import Players.PlayerTurnState;
 import javafx.scene.control.Button;
 
-import java.util.Iterator;
+import java.util.*;
 
 public class GameManager {
     private GameScene gameScene;
@@ -113,28 +113,38 @@ public class GameManager {
         }
     }
 
-    public void setupGame() {
-        addCardsToDeck(playerBoard,
-                CardLibrary.players_BattleAxe,
-                CardLibrary.players_DarkLance,
-                CardLibrary.players_EarthGiant,
-                CardLibrary.players_GuardianOfTheForest,
-                CardLibrary.players_ArcaneBlast,
-                CardLibrary.players_CrystalSword,
-                CardLibrary.players_EarthStaff,
-                CardLibrary.players_Earthquake
-        );
-        addCardsToDeck(opponentBoard,
-                CardLibrary.opponents_BattleAxe,
-                CardLibrary.opponents_DarkLance,
-                CardLibrary.opponents_EarthGiant,
-                CardLibrary.opponents_GuardianOfTheForest,
-                CardLibrary.opponents_ArcaneBlast,
-                CardLibrary.opponents_CrystalSword,
-                CardLibrary.opponents_EarthStaff,
-                CardLibrary.opponents_Earthquake
-        );
+    // Randomly selects unique cards from available cards.
+    private Card[] getRandomCards(List<Card> availableCards, int numberOfCards) {
+        Collections.shuffle(availableCards); // Shuffle for randomness
+        Card[] randomCards = availableCards.stream().limit(numberOfCards).toArray(Card[]::new);
+        availableCards.removeAll(Arrays.asList(randomCards)); // Ensure uniqueness
+        return randomCards;
     }
+
+    // Combines all card types into one list.
+    private List<Card> getAllCards(Card[] minions, Card[] spells, Card[] weapons) {
+        List<Card> cards = new ArrayList<>();
+        cards.addAll(Arrays.asList(minions));
+        cards.addAll(Arrays.asList(spells));
+        cards.addAll(Arrays.asList(weapons));
+        return cards;
+    }
+
+    // Prepares decks with random, unique cards for players.
+    public void setupGame() {
+        // Gather all player and opponent cards.
+        List<Card> playerCards = getAllCards(CardLibrary.playerMinions, CardLibrary.playerSpells, CardLibrary.playerWeapons);
+        List<Card> opponentCards = getAllCards(CardLibrary.opponentMinions, CardLibrary.opponentSpells, CardLibrary.opponentWeapons);
+
+        // Add unique cards to each deck.
+        Card[] playerRandomCards = getRandomCards(playerCards, 30);
+        addCardsToDeck(playerBoard, playerRandomCards);
+
+        Card[] opponentRandomCards = getRandomCards(opponentCards, 30);
+        addCardsToDeck(opponentBoard, opponentRandomCards);
+    }
+
+
 
 
     public void restoringValues(Board playerBoard, Board opponentBoard){

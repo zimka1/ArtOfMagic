@@ -2,6 +2,7 @@ package GameScene;
 import Cards.*;
 import GameBoard.*;
 import Players.*;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +14,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import javafx.util.Duration;
 
 
 public class GameScene extends Application {
@@ -42,6 +45,9 @@ public class GameScene extends Application {
     // UI Components: Labels
     private Label playerManaLabel;
     private Label opponentManaLabel;
+    private Label playerDeckCountLabel;
+    private Label opponentDeckCountLabel;
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -81,12 +87,33 @@ public class GameScene extends Application {
         playerDeckButton = new Button("Player's deck");
         opponentDeckButton = new Button("Opponent's deck");
         endTurnButton = new Button("End Turn");
-    }
+
+        playerDeckButton.setOnAction(e -> {
+            int count = gameManager.getPlayerBoard().getDeck().getCards().size();
+            playerDeckCountLabel.setText("Cards in deck: " + count);
+            playerDeckCountLabel.setVisible(true);
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(event -> playerDeckCountLabel.setVisible(false));
+            pause.play();
+        });
+        opponentDeckButton.setOnAction(e -> {
+            int count = gameManager.getOpponentBoard().getDeck().getCards().size();
+            opponentDeckCountLabel.setText("Cards in deck: " + count);
+            opponentDeckCountLabel.setVisible(true);
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(event -> opponentDeckCountLabel.setVisible(false));
+            pause.play();
+        });    }
 
     private void initializeLabels() {
         playerManaLabel = new Label();
         opponentManaLabel = new Label();
+        playerDeckCountLabel = new Label("Cards in deck: " + gameManager.getPlayerBoard().getDeck().getCards().size());
+        opponentDeckCountLabel = new Label("Cards in deck: " + gameManager.getOpponentBoard().getDeck().getCards().size());
+        playerDeckCountLabel.setVisible(false);
+        opponentDeckCountLabel.setVisible(false);
     }
+
 
     private void configureLayout() {
         // Configure alignments
@@ -100,7 +127,7 @@ public class GameScene extends Application {
 
         // Configure container relationships
         decksContainer.getChildren().addAll(opponentDeckButton, endTurnButton, playerDeckButton);
-        rightSideContainer.getChildren().addAll(opponentManaLabel, decksContainer, playerManaLabel);
+        rightSideContainer.getChildren().addAll(opponentDeckCountLabel,opponentManaLabel, decksContainer, playerManaLabel, playerDeckCountLabel);
         leftSideContainer.getChildren().addAll(opponentGraveyardContainer, playerGraveyardContainer);
         topSideContainer.getChildren().addAll(opponentCardView, opponentHandContainer);
         bottomSideContainer.getChildren().addAll(playerHandContainer, playerCardView);
@@ -242,6 +269,7 @@ public class GameScene extends Application {
             currentContainer.getChildren().add(cardView);
         }
     }
+
 
 
     public static void main(String[] args) {

@@ -16,100 +16,136 @@ import javafx.stage.Stage;
 
 
 public class GameScene extends Application {
-    private GameManager gameManager = new GameManager(this);
+    private final GameManager gameManager = new GameManager(this);
+    private PlayerCardView playerCardView;
+    private PlayerCardView opponentCardView;
 
+    // UI Components: Buttons
     private Button playerDeckButton;
     private Button opponentDeckButton;
-
     private Button endTurnButton;
 
-    private PlayerCardView playerCardView = new PlayerCardView("Player 1", gameManager.getPlayer().getNowHP());
-    private PlayerCardView opponentCardView = new PlayerCardView("Player 2", gameManager.getOpponent().getNowHP());
+    // UI Components: Containers
+    private HBox playerHandContainer;
+    private HBox opponentHandContainer;
+    private HBox playerBoardContainer;
+    private HBox opponentBoardContainer;
+    private HBox playerGraveyardContainer;
+    private HBox opponentGraveyardContainer;
+    private VBox decksContainer;
+    private VBox leftSideContainer;
+    private VBox rightSideContainer;
+    private VBox topSideContainer;
+    private VBox bottomSideContainer;
+    private VBox centerContainer;
 
-    private HBox playerHandContainer = new HBox(10);
-    private HBox opponentHandContainer = new HBox(10);
+    // UI Components: Labels
+    private Label playerManaLabel;
+    private Label opponentManaLabel;
 
-    private HBox playerBoardContainer = new HBox(10);
-    private HBox opponentBoardContainer = new HBox(10);
-
-    private HBox playerGraveyardContainer = new HBox(10);
-    private HBox opponentGraveyardContainer = new HBox(10);
-
-    private VBox decksContainer = new VBox(20);
-
-    private VBox leftSideContainer = new VBox(20);
-    private VBox rightSideContainer = new VBox(20);
-
-    private VBox topSideContainer = new VBox(20);
-    private VBox bottomSideContainer = new VBox(20);
-
-
-    private Label playerManaLabel = new Label();
-    private Label opponentManaLabel = new Label();
-
-
+    @Override
     public void start(Stage primaryStage) {
-        BorderPane root = new BorderPane();
+        initializeComponents();
+        configureLayout();
+        setStyles();
+        startGame(primaryStage);
+    }
+    private void initializeComponents() {
+        initializeViews();
+        initializeContainers();
+        initializeButtons();
+        initializeLabels();
+    }
+
+    private void initializeViews() {
+        playerCardView = new PlayerCardView("Player 1", gameManager.getPlayer().getNowHP());
+        opponentCardView = new PlayerCardView("Player 2", gameManager.getOpponent().getNowHP());
+    }
+
+    private void initializeContainers() {
+        playerHandContainer = new HBox(10);
+        opponentHandContainer = new HBox(10);
+        playerBoardContainer = new HBox(10);
+        opponentBoardContainer = new HBox(10);
+        playerGraveyardContainer = new HBox(10);
+        opponentGraveyardContainer = new HBox(10);
+        decksContainer = new VBox(20);
+        leftSideContainer = new VBox(20);
+        rightSideContainer = new VBox(20);
+        topSideContainer = new VBox(20);
+        bottomSideContainer = new VBox(20);
+        centerContainer = new VBox(5);
+    }
+
+    private void initializeButtons() {
+        playerDeckButton = new Button("Player's deck");
+        opponentDeckButton = new Button("Opponent's deck");
+        endTurnButton = new Button("End Turn");
+    }
+
+    private void initializeLabels() {
+        playerManaLabel = new Label();
+        opponentManaLabel = new Label();
+    }
+
+    private void configureLayout() {
+        // Configure alignments
         playerHandContainer.setAlignment(Pos.CENTER);
         opponentHandContainer.setAlignment(Pos.CENTER);
         playerBoardContainer.setAlignment(Pos.CENTER);
         opponentBoardContainer.setAlignment(Pos.CENTER);
-        updatePlayerViews();
-
-
-        playerDeckButton = new Button("Player's deck");
-
-        opponentDeckButton = new Button("Opponent's deck");
-
-        endTurnButton = new Button("End Turn");
-
-        decksContainer.getChildren().addAll(opponentDeckButton, endTurnButton, playerDeckButton);
-        rightSideContainer.getChildren().addAll(opponentManaLabel, decksContainer, playerManaLabel);
+        centerContainer.setAlignment(Pos.CENTER);
         rightSideContainer.setAlignment(Pos.CENTER_RIGHT);
-
-        leftSideContainer.getChildren().addAll(opponentGraveyardContainer, playerGraveyardContainer);
         leftSideContainer.setAlignment(Pos.CENTER_LEFT);
 
-
-        playerHandContainer.setSpacing(5);
-        opponentHandContainer.setSpacing(5);
-
-
+        // Configure container relationships
+        decksContainer.getChildren().addAll(opponentDeckButton, endTurnButton, playerDeckButton);
+        rightSideContainer.getChildren().addAll(opponentManaLabel, decksContainer, playerManaLabel);
+        leftSideContainer.getChildren().addAll(opponentGraveyardContainer, playerGraveyardContainer);
         topSideContainer.getChildren().addAll(opponentCardView, opponentHandContainer);
         bottomSideContainer.getChildren().addAll(playerHandContainer, playerCardView);
+        centerContainer.getChildren().addAll(opponentBoardContainer, playerBoardContainer);
 
+        // Set additional spacing and alignment
+        playerHandContainer.setSpacing(5);
+        opponentHandContainer.setSpacing(5);
+        centerContainer.setSpacing(20);
+    }
 
+    private void setStyles() {
+        // Apply CSS and class styles
+        String css = this.getClass().getResource("/style.css").toExternalForm();
+        playerBoardContainer.getStyleClass().add("borderStyle");
+        opponentBoardContainer.getStyleClass().add("borderStyle");
+        playerBoardContainer.setMaxWidth(700);
+        opponentBoardContainer.setMaxWidth(700);
+    }
+
+    private void startGame(Stage primaryStage) {
+
+        // Begin the game logic
+        beginGame();
+
+        // Set up the scene and primary stage
+        BorderPane root = new BorderPane();
         root.setRight(rightSideContainer);
         root.setLeft(leftSideContainer);
         root.setBottom(bottomSideContainer);
         root.setTop(topSideContainer);
-
-        VBox centerContainer = new VBox(5);
-        centerContainer.setAlignment(Pos.CENTER);
-        centerContainer.getChildren().addAll(opponentBoardContainer, playerBoardContainer);
         root.setCenter(centerContainer);
-        centerContainer.setSpacing(20);
-
-        beginGame();
 
         Scene scene = new Scene(root, 1200, 1000);
         String css = this.getClass().getResource("/style.css").toExternalForm();
         scene.getStylesheets().add(css);
 
-        playerBoardContainer.getStyleClass().add("borderStyle");
-        opponentBoardContainer.getStyleClass().add("borderStyle");
-        playerBoardContainer.setMaxWidth(700);
-        opponentBoardContainer.setMaxWidth(700);
-
-
-
-
-
         primaryStage.setScene(scene);
         primaryStage.setTitle("Art Of Magic");
         primaryStage.setFullScreen(true);
         primaryStage.show();
+
+
     }
+
 
     private void beginGame() {
         gameManager.setupGame();
@@ -120,6 +156,8 @@ public class GameScene extends Application {
         allUpdatesForBegining();
         gameManager.startTurn(endTurnButton);
     }
+
+
 
     public void allUpdatesForBegining(){
         updateManaLabels();

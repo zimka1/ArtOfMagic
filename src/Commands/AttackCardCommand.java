@@ -29,7 +29,7 @@ public class AttackCardCommand implements GameCommand{
             gameManager.getPlayer().minusMana(attacker.getCard().getManaCost());
             gameManager.getPlayer().getHand().removeCard(attacker.getCard().getID());
         }
-        if (attacker.getCard() instanceof Card_Spell && attacker.getCard().getWhose() == gameManager.getPlayer().getWhose()){
+        if (attacker.getCard() instanceof Card_Spell && attacker.getCard().getWhose() == gameManager.getOpponent().getWhose()){
             gameManager.getOpponent().minusMana(attacker.getCard().getManaCost());
             gameManager.getOpponent().getHand().removeCard(attacker.getCard().getID());
         }

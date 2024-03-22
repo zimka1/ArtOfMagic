@@ -4,6 +4,7 @@ import GameBoard.*;
 import Players.*;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -69,7 +70,7 @@ public class GameScene extends Application {
     }
 
     private void initializeContainers() {
-        playerHandContainer = new HBox(10);
+        playerHandContainer = new HBox(100);
         opponentHandContainer = new HBox(10);
         playerBoardContainer = new HBox(10);
         opponentBoardContainer = new HBox(10);
@@ -116,6 +117,8 @@ public class GameScene extends Application {
 
 
     private void configureLayout() {
+
+
         // Configure alignments
         playerHandContainer.setAlignment(Pos.CENTER);
         opponentHandContainer.setAlignment(Pos.CENTER);
@@ -127,10 +130,10 @@ public class GameScene extends Application {
 
         // Configure container relationships
         decksContainer.getChildren().addAll(opponentDeckButton, endTurnButton, playerDeckButton);
-        rightSideContainer.getChildren().addAll(opponentDeckCountLabel,opponentManaLabel, decksContainer, playerManaLabel, playerDeckCountLabel);
+        rightSideContainer.getChildren().addAll(opponentCardView, opponentDeckCountLabel,opponentManaLabel, decksContainer, playerManaLabel, playerDeckCountLabel, playerCardView);
         leftSideContainer.getChildren().addAll(opponentGraveyardContainer, playerGraveyardContainer);
-        topSideContainer.getChildren().addAll(opponentCardView, opponentHandContainer);
-        bottomSideContainer.getChildren().addAll(playerHandContainer, playerCardView);
+        topSideContainer.getChildren().addAll(opponentHandContainer);
+        bottomSideContainer.getChildren().addAll(playerHandContainer);
         centerContainer.getChildren().addAll(opponentBoardContainer, playerBoardContainer);
 
         // Set additional spacing and alignment

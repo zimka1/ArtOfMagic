@@ -36,42 +36,39 @@ public class CardView extends StackPane {
     public Card getWeapon(){return weapon;}
 
     private void initializeCardUI() {
-        // Фон карты
-        Rectangle background = new Rectangle(100, 130);
-        background.setArcWidth(10);
-        background.setArcHeight(10);
-        background.setFill(Color.CHARTREUSE);
+        Rectangle background = new Rectangle(100, 120);
+        background.getStyleClass().add("card-background");
 
-        // Метка с именем карты
         nameLabel = new Label(card.getName());
-        nameLabel.setFont(new Font("Arial", 10));
+        nameLabel.getStyleClass().addAll("card-label", "card-name");
         StackPane.setAlignment(nameLabel, Pos.TOP_CENTER);
 
-        // Метка с стоимостью маны
         manaCostLabel = new Label(Integer.toString(card.getManaCost()));
-        manaCostLabel.setFont(new Font("Arial", 10));
+        manaCostLabel.getStyleClass().addAll("card-label", "card-mana");
         StackPane.setAlignment(manaCostLabel, Pos.TOP_LEFT);
 
-        // Метка с силой карты
         powerLabel = new Label(Integer.toString(card.getPower() + (card.getWeapon() != null ? card.getWeapon().getPower() : 0)));
-        powerLabel.setFont(new Font("Arial", 10));
+        powerLabel.getStyleClass().addAll("card-label", "card-power");
         StackPane.setAlignment(powerLabel, Pos.BOTTOM_LEFT);
+
 
         if (weapon != null){
             System.out.println(weapon.getName());
             weaponLabel = new Label(weapon.getName());
             weaponLabel.setFont(new Font("Arial", 10));
+            weaponLabel.getStyleClass().addAll("card-label", "card-weapon");
             StackPane.setAlignment(weaponLabel, Pos.CENTER);
         }
 
         if (card.getNowHP() != 0){
             HPLabel = new Label(Integer.toString(card.getNowHP()));
-            HPLabel.setFont(new Font("Arial", 10));
+            HPLabel.getStyleClass().addAll("card-label", "card-hp");
             StackPane.setAlignment(HPLabel, Pos.BOTTOM_RIGHT);
         }
         else if (card.getNumberOfUses() != 0){
             NumberOfUsesLabel = new Label(Integer.toString(card.getNumberOfUses()));
             NumberOfUsesLabel.setFont(new Font("Arial", 10));
+            NumberOfUsesLabel.getStyleClass().addAll("card-label", "card-uses");
             StackPane.setAlignment(NumberOfUsesLabel, Pos.BOTTOM_RIGHT);
         }
 

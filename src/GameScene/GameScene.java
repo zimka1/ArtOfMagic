@@ -210,6 +210,8 @@ public class GameScene extends Application {
         });
         playerCardView.updateHP(gameManager.getPlayer().getNowHP());
         opponentCardView.updateHP(gameManager.getOpponent().getNowHP());
+        if (gameManager.getPlayer().getNowHP() <= 0 || gameManager.getOpponent().getNowHP() <= 0)
+            gameManager.playerHasNoHP();
     }
 
     public void updateHandDisplay(Player player) {

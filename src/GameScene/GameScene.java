@@ -210,9 +210,25 @@ public class GameScene extends Application {
         });
         playerCardView.updateHP(gameManager.getPlayer().getNowHP());
         opponentCardView.updateHP(gameManager.getOpponent().getNowHP());
-        if (gameManager.getPlayer().getNowHP() <= 0 || gameManager.getOpponent().getNowHP() <= 0)
-            gameManager.playerHasNoHP();
+
+        if (gameManager.getPlayer().getNowHP() <= 0 || gameManager.getOpponent().getNowHP() <= 0) {
+                moveToGameOverScene();
+        }
     }
+
+    private void moveToGameOverScene() {
+        try {
+            Stage stage = (Stage) centerContainer.getScene().getWindow();
+            stage.close();
+
+            GameOverScene gameOverScene = new GameOverScene(gameManager);
+            Stage newStage = new Stage();
+            gameOverScene.start(newStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void updateHandDisplay(Player player) {
         if (player == gameManager.getPlayer()) {

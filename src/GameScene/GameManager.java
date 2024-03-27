@@ -113,10 +113,6 @@ public class GameManager {
         }
     }
 
-    public void playerHasNoHP(){
-        EndGame endGame = new EndGame(this);
-        executeCommand(endGame);
-    }
 
     // Randomly selects unique cards from available cards.
     private Card[] getRandomCards(List<Card> availableCards, int numberOfCards) {

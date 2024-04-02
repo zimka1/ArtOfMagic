@@ -2,9 +2,11 @@ package Commands;
 
 import Cards.CardView;
 import Cards.TypeOfCard.Card_Spell;
+import Cards.TypeOfCard.Card_Weapon;
 import GameBoard.Board;
 import GameScene.GameManager;
 import GameScene.GameScene;
+import Judges.TaskStatus;
 import Players.Player;
 
 public class AttackPlayerCommand implements GameCommand{
@@ -23,13 +25,27 @@ public class AttackPlayerCommand implements GameCommand{
         this.gameScene = gameScene;
     }
 
-    public void execute() {
+    public void execute(TaskStatus taskStatus) {
         CardView selectedCardForAttack = gameManager.getSelectedCardForAttack();
         if (selectedCardForAttack.getCard().getWeapon() != null){
-            defendingPlayer.takingDamage(selectedCardForAttack.getCard().getPower() + selectedCardForAttack.getCard().getWeapon().getPower());
+            int damage = selectedCardForAttack.getCard().getPower() + selectedCardForAttack.getCard().getWeapon().getPower();
+            defendingPlayer.takingDamage(damage);
+            if (defendingPlayer.getWhose() == gameManager.getPlayer().getWhose()){
+                taskStatus.setHPlose(damage);
+            }
+            else{
+                taskStatus.setCurrentOppLostHPInOneTurn(damage);
+            }
         }
-        else{
-            defendingPlayer.takingDamage(selectedCardForAttack.getCard().getPower());
+        else if (!(selectedCardForAttack.getCard() instanceof Card_Weapon)){
+            int damage = selectedCardForAttack.getCard().getPower();
+            defendingPlayer.takingDamage(damage);
+            if (defendingPlayer.getWhose() == gameManager.getPlayer().getWhose()){
+                taskStatus.setHPlose(damage);
+            }
+            else{
+                taskStatus.setCurrentOppLostHPInOneTurn(damage);
+            }
         }
         selectedCardForAttack.getCard().setAlreadyAttacked(1);
         if (selectedCardForAttack.getCard() instanceof Card_Spell){
@@ -37,6 +53,7 @@ public class AttackPlayerCommand implements GameCommand{
             attackingPlayer.getHand().removeCard(selectedCardForAttack.getCard().getID());
             selectedCardForAttack.getCard().death(attackingBoard);
             selectedCardForAttack = null;
+            taskStatus.setNumberSpellCards();
             gameScene.updateManaLabels();
             gameScene.updateHandDisplay(attackingPlayer);
             gameScene.updateGraveyardDisplay(attackingBoard);

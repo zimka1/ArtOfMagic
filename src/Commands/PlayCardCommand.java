@@ -6,6 +6,7 @@ import Cards.TypeOfCard.Card_Weapon;
 import GameBoard.Board;
 import GameScene.GameManager;
 import GameScene.GameScene;
+import Judges.TaskStatus;
 import Players.Player;
 
 public class PlayCardCommand implements GameCommand {
@@ -26,7 +27,7 @@ public class PlayCardCommand implements GameCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute(TaskStatus taskStatus) {
         if (cardView.getCard().getManaCost() > mana) {
             System.out.println("You don't have enough mana!");
             return;
@@ -38,13 +39,18 @@ public class PlayCardCommand implements GameCommand {
             gameManager.selectCard(cardView);
         }
         else{
-
+            if (player.getWhose() == gameManager.getPlayer().getWhose()){
+                taskStatus.setNumberMinionCards();
+            }
             gameManager.selectCard(cardView);
             player.putCardOnTable(cardView.getCard().getID(), board);
             gameManager.setSelectedCardForAttack(null);
             gameScene.updateBoardDisplay(board);
             gameScene.updateManaLabels();
             gameScene.updateHandDisplay(player);
+            if (player.getWhose() == gameManager.getPlayer().getWhose() && gameManager.getPlayer().getHand().getCards().isEmpty()){
+                taskStatus.setUseAllCardsInOneTurn();
+            }
         }
 
     }

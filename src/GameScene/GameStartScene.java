@@ -16,6 +16,8 @@ public class GameStartScene extends Application {
     private VBox tasksContainer; // Container specifically for tasks, allowing for easy refresh
     private JudgeTaskManager taskManager = new JudgeTaskManager(); // Manages the logic behind assigning and reassigning tasks
 
+    List<JudgeTask> tasksForThisGame;
+
     @Override
     public void start(Stage primaryStage) {
         VBox root = new VBox(15); // Main container for the scene
@@ -31,7 +33,7 @@ public class GameStartScene extends Application {
         // Set up and add the 'Start the game' button
         Button startGameButton = new Button("Start the game");
         startGameButton.getStyleClass().add("button");
-        startGameButton.setOnAction(event -> moveToGameScene(primaryStage)); 
+        startGameButton.setOnAction(event -> moveToGameScene(primaryStage));
 
 
         // Set up and add the 'Reassign Tasks' button
@@ -58,7 +60,7 @@ public class GameStartScene extends Application {
         tasksContainer.getChildren().addAll(title); // Add the title to the tasks container
 
         // Fetch and display a set of tasks, including the judge's name for each
-        List<JudgeTask> tasksForThisGame = taskManager.getRandomTasksForJudges();
+        tasksForThisGame = taskManager.getRandomTasksForJudges();
         for (JudgeTask task : tasksForThisGame) {
             String taskText = task.getDescription() + " (Judge: " + task.getOwnerName() + ")";
             Label taskLabel = new Label(taskText);
@@ -70,7 +72,7 @@ public class GameStartScene extends Application {
     private void moveToGameScene(Stage currentStage) {
         try {
             // Assuming GameScene is your class that sets up the game scene
-            GameScene gameScene = new GameScene();
+            GameScene gameScene = new GameScene(tasksForThisGame);
             // Close the current window
             currentStage.close();
             // Set up a new stage for the game scene

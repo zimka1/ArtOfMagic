@@ -3,6 +3,7 @@ package Commands;
 import Cards.CardView;
 import Cards.TypeOfCard.Card_Weapon;
 import GameScene.*;
+import Judges.TaskStatus;
 
 public class SetupCardInteractionCommand implements GameCommand{
 
@@ -17,7 +18,7 @@ public class SetupCardInteractionCommand implements GameCommand{
         this.gameScene = gameScene;
     }
 
-    public void execute() {
+    public void execute(TaskStatus taskStatus) {
         CardView selectedCardForAttack = gameManager.getSelectedCardForAttack();
         if (selectedCardForAttack != null && selectedCardForAttack.getCard() instanceof Card_Weapon){
             if (selectedCardForAttack != null && cardView.getCard().getWhose() == selectedCardForAttack.getCard().getWhose()) {
@@ -29,6 +30,7 @@ public class SetupCardInteractionCommand implements GameCommand{
                     if (gameManager.getOpponent().getNowMana() >= selectedCardForAttack.getCard().getManaCost())
                         gameManager.getOpponent().minusMana(selectedCardForAttack.getCard().getManaCost());
                 }
+                taskStatus.setNumberWeaponCards();
                 cardView.getCard().setWeapon(selectedCardForAttack.getCard(), gameManager.getPlayerTurn() ? gameManager.getPlayer().getHand() : gameManager.getOpponent().getHand());
                 gameManager.setSelectedCardForAttack(null);
                 gameScene.updateHandDisplay(gameManager.getPlayerTurn() ? gameManager.getPlayer() : gameManager.getOpponent());

@@ -7,6 +7,7 @@ import Commands.*;
 import GameBoard.Board;
 import Judges.JudgeTask;
 import Judges.JudgeTaskManager;
+import Judges.TaskStatus;
 import Players.GameState;
 import Players.Player;
 import Players.PlayerTurnState;
@@ -15,20 +16,21 @@ import javafx.scene.control.Button;
 import java.util.*;
 
 public class GameManager {
-    private GameScene gameScene;
-    private Board playerBoard;
-    private Board opponentBoard;
-    private Player player;
-    private Player opponent;
+    private final GameScene gameScene;
+    private final Board playerBoard;
+    private final Board opponentBoard;
+    private final Player player;
+    private final Player opponent;
     private boolean isPlayerTurn;
 
     private CardView selectedCardForAttack = null;
 
     private GameState currentState;
 
+    TaskStatus taskStatus = new TaskStatus();
 
     private JudgeTaskManager taskManager = new JudgeTaskManager();
-    private List<JudgeTask> currentJudgeTasks;
+    private List<JudgeTask> tasksForThisGame;
 
     public GameManager(GameScene gameScene) {
         this.gameScene = gameScene;
@@ -38,6 +40,7 @@ public class GameManager {
         this.opponent = new Player(2);
         this.isPlayerTurn = true;
         this.currentState = new PlayerTurnState();
+        this.tasksForThisGame = gameScene.getTasksForThisGame();
     }
 
     // getters
@@ -67,6 +70,10 @@ public class GameManager {
         return selectedCardForAttack;
     }
 
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
+    }
+
     // Setters
 
     public void setPlayerTurn(boolean playerTurn) {
@@ -84,7 +91,7 @@ public class GameManager {
     }
 
     public void executeCommand(GameCommand command) {
-        command.execute();
+        command.execute(taskStatus);
     }
 
     public void drawCardForPlayer(Player toWhom, Board whoseBoard) {
@@ -121,9 +128,9 @@ public class GameManager {
 
 
     // Randomly selects unique cards from available cards.
-    private Card[] getRandomCards(List<Card> availableCards, int numberOfCards) {
+    private Card[] getRandomCards(List<Card> availableCards) {
         Collections.shuffle(availableCards); // Shuffle for randomness
-        Card[] randomCards = availableCards.stream().limit(numberOfCards).toArray(Card[]::new);
+        Card[] randomCards = availableCards.stream().limit(30).toArray(Card[]::new);
         availableCards.removeAll(Arrays.asList(randomCards)); // Ensure uniqueness
         return randomCards;
     }
@@ -137,9 +144,6 @@ public class GameManager {
         return cards;
     }
 
-    public void assignTasksToJudges() {
-        currentJudgeTasks = taskManager.getRandomTasksForJudges();
-    }
 
 
 
@@ -150,10 +154,10 @@ public class GameManager {
         List<Card> opponentCards = getAllCards(CardLibrary.opponentMinions, CardLibrary.opponentSpells, CardLibrary.opponentWeapons);
 
         // Add unique cards to each deck.
-        Card[] playerRandomCards = getRandomCards(playerCards, 30);
+        Card[] playerRandomCards = getRandomCards(playerCards);
         addCardsToDeck(playerBoard, playerRandomCards);
 
-        Card[] opponentRandomCards = getRandomCards(opponentCards, 30);
+        Card[] opponentRandomCards = getRandomCards(opponentCards);
         addCardsToDeck(opponentBoard, opponentRandomCards);
     }
 

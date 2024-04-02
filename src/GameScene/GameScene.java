@@ -1,6 +1,7 @@
 package GameScene;
 import Cards.*;
 import GameBoard.*;
+import Judges.JudgeTask;
 import Players.*;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
@@ -17,6 +18,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javafx.util.Duration;
+
+import java.util.List;
 
 
 public class GameScene extends Application {
@@ -49,6 +52,16 @@ public class GameScene extends Application {
     private Label playerDeckCountLabel;
     private Label opponentDeckCountLabel;
 
+
+    private List<JudgeTask> tasksForThisGame;
+
+    public GameScene(List<JudgeTask> tasksForThisGame) {
+        this.tasksForThisGame = tasksForThisGame;
+    }
+
+    public List<JudgeTask> getTasksForThisGame() {
+        return tasksForThisGame;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -220,7 +233,7 @@ public class GameScene extends Application {
         try {
             Stage stage = (Stage) centerContainer.getScene().getWindow();
             // Assuming GameScene is your class that sets up the game scene
-            GameOverScene gameOverScene = new GameOverScene(gameManager);
+            GameOverScene gameOverScene = new GameOverScene(gameManager, gameManager.taskStatus);
             // Close the current window
             // Set up a new stage for the game scene
             Stage newStage = new Stage();

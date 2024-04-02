@@ -5,6 +5,7 @@ import Cards.TypeOfCard.Card_Spell;
 import GameBoard.Board;
 import GameScene.GameManager;
 import GameScene.GameScene;
+import Judges.TaskStatus;
 
 public class AttackCardCommand implements GameCommand{
     private CardView attacker;
@@ -19,7 +20,7 @@ public class AttackCardCommand implements GameCommand{
         this.gameScene = gameScene;
     }
 
-    public void execute() {
+    public void execute(TaskStatus taskStatus) {
         Board attackerBoard = (attacker.getCard().getWhose() == gameManager.getPlayer().getWhose()) ? gameManager.getPlayerBoard() : gameManager.getOpponentBoard();
         Board targetBoard = (target.getCard().getWhose() == gameManager.getPlayer().getWhose()) ? gameManager.getPlayerBoard() : gameManager.getOpponentBoard();
 
@@ -28,6 +29,7 @@ public class AttackCardCommand implements GameCommand{
         if (attacker.getCard() instanceof Card_Spell && attacker.getCard().getWhose() == gameManager.getPlayer().getWhose()){
             gameManager.getPlayer().minusMana(attacker.getCard().getManaCost());
             gameManager.getPlayer().getHand().removeCard(attacker.getCard().getID());
+            taskStatus.setNumberSpellCards();
         }
         if (attacker.getCard() instanceof Card_Spell && attacker.getCard().getWhose() == gameManager.getOpponent().getWhose()){
             gameManager.getOpponent().minusMana(attacker.getCard().getManaCost());

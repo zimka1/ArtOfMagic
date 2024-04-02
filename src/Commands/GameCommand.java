@@ -1,6 +1,8 @@
 package Commands;
 
+import Judges.TaskStatus;
+
 public interface GameCommand {
-    void execute();
+    void execute(TaskStatus taskStatus);
 }
 

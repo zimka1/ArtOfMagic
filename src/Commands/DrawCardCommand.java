@@ -2,6 +2,7 @@ package Commands;
 
 import GameBoard.Board;
 import GameScene.GameScene;
+import Judges.TaskStatus;
 import Players.Player;
 
 public class DrawCardCommand implements GameCommand {
@@ -15,7 +16,7 @@ public class DrawCardCommand implements GameCommand {
         this.gameScene = gameScene;
     }
 
-    public void execute() {
+    public void execute(TaskStatus taskStatus) {
         player.putCardInHand(board.getDeck());
         gameScene.updateHandDisplay(player);
     }

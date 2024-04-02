@@ -17,6 +17,7 @@ public class OpponentTurnState implements GameState {
                 gameManager.getSelectedCardForAttack().getStyleClass().remove("selected");
             }
             gameManager.setSelectedCardForAttack(null);
+            gameManager.getTaskStatus().setOppLostHPInOneTurn();
             changeTurn(gameManager, endTurnButton);
         });
     }

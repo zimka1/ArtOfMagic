@@ -5,7 +5,7 @@ import GameBoard.Board;
 
 public class Player {
     private Hand hand = new Hand();
-    private int hp = 2;
+    private int hp = 10;
     private int whose = 0;
     private int mana = 10;
     private int nowMana = 100;

@@ -22,7 +22,7 @@ public class GameOverScene extends Application {
         Label whoWin;
         if (gameManager.getOpponent().getNowHP() <= 0) {
             whoWin = new Label("You win!");
-        } else {
+        } else{
             whoWin = new Label("You lose!");
         }
 
@@ -30,7 +30,7 @@ public class GameOverScene extends Application {
         vBox.getChildren().addAll(gameOver, whoWin);
         vBox.setAlignment(Pos.CENTER); 
 
-        Scene scene = new Scene(vBox, 300, 200);
+        Scene scene = new Scene(vBox, 900, 600);
         stage.setTitle("Game Over");
         stage.setScene(scene);
         stage.show();

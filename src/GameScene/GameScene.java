@@ -219,11 +219,14 @@ public class GameScene extends Application {
     private void moveToGameOverScene() {
         try {
             Stage stage = (Stage) centerContainer.getScene().getWindow();
-            stage.close();
-
+            // Assuming GameScene is your class that sets up the game scene
             GameOverScene gameOverScene = new GameOverScene(gameManager);
+            // Close the current window
+            // Set up a new stage for the game scene
             Stage newStage = new Stage();
+            stage.setFullScreen(false);
             gameOverScene.start(newStage);
+            stage.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

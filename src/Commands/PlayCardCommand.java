@@ -38,6 +38,7 @@ public class PlayCardCommand implements GameCommand {
             gameManager.selectCard(cardView);
         }
         else{
+
             gameManager.selectCard(cardView);
             player.putCardOnTable(cardView.getCard().getID(), board);
             gameManager.setSelectedCardForAttack(null);

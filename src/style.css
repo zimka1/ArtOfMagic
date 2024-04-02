@@ -41,3 +41,29 @@
 .card-uses {
     -fx-font-size: 12px;
 }
+
+
+//GameStartScene
+
+.root {
+    -fx-padding: 20px;
+    -fx-alignment: center;
+}
+
+.label-title {
+    -fx-font-size: 20px;
+    -fx-text-fill: #2e4e96;
+    -fx-font-weight: bold;
+}
+
+.task-label {
+    -fx-padding: 5px;
+}
+
+.button {
+    -fx-background-color: #2e4e96;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+}
+

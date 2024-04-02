@@ -5,6 +5,8 @@ import Cards.CardLibrary;
 import Cards.CardView;
 import Commands.*;
 import GameBoard.Board;
+import Judges.JudgeTask;
+import Judges.JudgeTaskManager;
 import Players.GameState;
 import Players.Player;
 import Players.PlayerTurnState;
@@ -23,6 +25,10 @@ public class GameManager {
     private CardView selectedCardForAttack = null;
 
     private GameState currentState;
+
+
+    private JudgeTaskManager taskManager = new JudgeTaskManager();
+    private List<JudgeTask> currentJudgeTasks;
 
     public GameManager(GameScene gameScene) {
         this.gameScene = gameScene;
@@ -130,6 +136,12 @@ public class GameManager {
         cards.addAll(Arrays.asList(weapons));
         return cards;
     }
+
+    public void assignTasksToJudges() {
+        currentJudgeTasks = taskManager.getRandomTasksForJudges();
+    }
+
+
 
     // Prepares decks with random, unique cards for players.
     public void setupGame() {

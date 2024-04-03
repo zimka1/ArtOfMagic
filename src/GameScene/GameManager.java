@@ -70,6 +70,14 @@ public class GameManager {
         return selectedCardForAttack;
     }
 
+    public List<JudgeTask> getTasksForThisGame() {
+        return tasksForThisGame;
+    }
+
+    public JudgeTaskManager getTaskManager() {
+        return taskManager;
+    }
+
     public TaskStatus getTaskStatus() {
         return taskStatus;
     }

@@ -233,7 +233,7 @@ public class GameScene extends Application {
         try {
             Stage stage = (Stage) centerContainer.getScene().getWindow();
             // Assuming GameScene is your class that sets up the game scene
-            GameOverScene gameOverScene = new GameOverScene(gameManager, gameManager.taskStatus);
+            GameOverScene gameOverScene = new GameOverScene(gameManager, gameManager.taskStatus, tasksForThisGame);
             // Close the current window
             // Set up a new stage for the game scene
             Stage newStage = new Stage();

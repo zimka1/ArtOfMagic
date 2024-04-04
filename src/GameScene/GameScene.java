@@ -1,5 +1,6 @@
 package GameScene;
 import Cards.*;
+import Commands.SetupCardInteractionCommand;
 import GameBoard.*;
 import Judges.JudgeTask;
 import Players.*;
@@ -7,9 +8,11 @@ import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -256,6 +259,9 @@ public class GameScene extends Application {
                     if (gameManager.getPlayerTurn()){
                         gameManager.clickedOnHand(cardView, gameManager.getPlayer(), gameManager.getPlayerBoard(), gameManager.getPlayer().getNowMana());
                     }
+                    else{
+                        showTemporaryTooltip(cardView, "You cannot use the opponent's cards during your turn!");
+                    }
                 });
 
             }
@@ -268,11 +274,26 @@ public class GameScene extends Application {
                     if (!gameManager.getPlayerTurn()) {
                         gameManager.clickedOnHand(cardView, gameManager.getOpponent(), gameManager.getOpponentBoard(), gameManager.getOpponent().getNowMana());
                     }
+                    else{
+                        showTemporaryTooltip(cardView, "You cannot use the opponent's cards during your turn!");
+                    }
                 });
 
             }
         }
     }
+    private void showTemporaryTooltip(Node anchor, String message) {
+        Tooltip tooltip = new Tooltip(message);
+        tooltip.setAutoHide(true);
+        tooltip.show(anchor.getScene().getWindow(),
+                anchor.localToScreen(anchor.getBoundsInLocal()).getMinX(),
+                anchor.localToScreen(anchor.getBoundsInLocal()).getMaxY());
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(1));
+        delay.setOnFinished(event -> tooltip.hide());
+        delay.play();
+    }
+
     public void updateManaLabels() {
         playerManaLabel.setText(gameManager.getPlayer().getNowMana() + "/" + gameManager.getPlayer().getMana());
         opponentManaLabel.setText(gameManager.getOpponent().getNowMana() + "/" + gameManager.getOpponent().getMana());
@@ -293,7 +314,17 @@ public class GameScene extends Application {
                 cardView = new CardView(card);
             }
             currentContainer.getChildren().add(cardView);
-            gameManager.setupCardInteraction(cardView);
+            cardView.setOnMouseClicked(e -> {
+                System.out.println(cardView.getCard().getWhose());
+                System.out.println(gameManager.getPlayerTurn());
+                if (((cardView.getCard().getWhose() == 1 && !gameManager.getPlayerTurn()) ||
+                        (cardView.getCard().getWhose() == 2 && gameManager.getPlayerTurn()))
+                            && gameManager.getSelectedCardForAttack() == null){
+                    showTemporaryTooltip(cardView, "You cannot use the opponent's cards during your turn!");
+                }else{
+                    gameManager.setupCardInteraction(cardView);
+                }
+            });
         }
     }
     public void updateGraveyardDisplay(Board board) {

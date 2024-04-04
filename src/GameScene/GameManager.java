@@ -191,11 +191,8 @@ public class GameManager {
     }
 
     public void setupCardInteraction(CardView cardView) {
-        cardView.setOnMouseClicked(e -> {
             SetupCardInteractionCommand setupCardInteractionCommand = new SetupCardInteractionCommand(cardView,this, gameScene);
             executeCommand(setupCardInteractionCommand);
-
-        });
     }
     public void selectCard(CardView cardView) {
         if (selectedCardForAttack != null) {

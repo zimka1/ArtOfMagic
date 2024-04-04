@@ -20,6 +20,7 @@ public class SetupCardInteractionCommand implements GameCommand{
 
     public void execute(TaskStatus taskStatus) {
         CardView selectedCardForAttack = gameManager.getSelectedCardForAttack();
+
         if (selectedCardForAttack != null && selectedCardForAttack.getCard() instanceof Card_Weapon){
             if (selectedCardForAttack != null && cardView.getCard().getWhose() == selectedCardForAttack.getCard().getWhose()) {
                 if (gameManager.getPlayerTurn()){

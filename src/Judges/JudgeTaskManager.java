@@ -20,7 +20,7 @@ public class JudgeTaskManager {
     // initializeTasks adds predefined tasks to the tasks list.
     private void initializeTasks() {
         tasks.add(new JudgeTask(1, "Use at least 5 spell cards", "Zephyr"));
-        tasks.add(new JudgeTask(2, "Don't lose more than 10 health per game", "Eldrin"));
+        tasks.add(new JudgeTask(2, "Don't lose more than 5 health per game", "Eldrin"));
         tasks.add(new JudgeTask(3, "Use at least 4 weapon cards", "Seraphina"));
         tasks.add(new JudgeTask(4, "Use all cards in your hand at least 2 times", "Mystra"));
         tasks.add(new JudgeTask(5, "Deal at least 8 damage to an enemy in one turn", "Thalion"));
@@ -63,7 +63,7 @@ public class JudgeTaskManager {
             case 1:
                 return Math.min(status.getNumberSpellCards(), 5) * 20;
             case 2:
-                return status.getHPlose() > 10 ? 0 : 100;
+                return status.getHPlose() > 5 ? 0 : 100;
             case 3:
                 return Math.min(status.getNumberWeaponCards(), 4) * 25;
             case 4:
@@ -79,7 +79,7 @@ public class JudgeTaskManager {
         }
     }
     // decideIfPassed determines if the task is considered passed based on a random threshold compared to the progress percentage.
-    private boolean decideIfPassed(int progressPercent) {
+    public boolean decideIfPassed(int progressPercent) {
         int threshold = random.nextInt(100) + 1; // Generates a random threshold between 1 and 100.
         return progressPercent >= threshold; // The task passes if the completion percentage is greater than the threshold.
     }

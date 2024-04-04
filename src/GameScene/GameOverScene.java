@@ -8,6 +8,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -16,7 +17,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.util.List;
 
 public class GameOverScene extends Application {
@@ -40,10 +40,10 @@ public class GameOverScene extends Application {
         boolean win = gameManager.getOpponent().getNowHP() <= 0;
 
         Label gameOver = new Label("Game over!");
-        gameOver.setFont(Font.font("Arial", FontWeight.BOLD, 24)); // Устанавливаем шрифт
+        gameOver.setFont(Font.font("Arial", FontWeight.BOLD, 24)); // Set font
         Label whoWin = win ? new Label("You win!") : new Label("You lose!");
-        whoWin.setFont(Font.font("Arial", FontWeight.BOLD, 20)); // Устанавливаем шрифт
-        whoWin.setTextFill(win ? Color.GREEN : Color.RED); // Цвет текста в зависимости от результата
+        whoWin.setFont(Font.font("Arial", FontWeight.BOLD, 20)); // Set font
+        whoWin.setTextFill(win ? Color.GREEN : Color.RED); // Set text color based on result
 
         VBox mainContainer = new VBox(10);
         mainContainer.getChildren().addAll(gameOver, whoWin);
@@ -51,10 +51,6 @@ public class GameOverScene extends Application {
 
         resultContainer = new VBox(10);
         resultContainer.setAlignment(Pos.CENTER);
-
-//        Label hpLostLabel = new Label("HP Lost: " + taskStatus.getHPlose());
-//        hpLostLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-//        resultContainer.getChildren().add(hpLostLabel);
 
         // Add resultContainer to the main VBox
         mainContainer.getChildren().add(resultContainer);
@@ -66,7 +62,20 @@ public class GameOverScene extends Application {
         // Add tasksCompletedContainer to the main VBox
         mainContainer.getChildren().add(tasksCompletedContainer);
 
+        // Add restart button
+        Button restartButton = new Button("Restart Game");
+        restartButton.getStyleClass().add("restart-button"); // Apply CSS styling to the button
+        restartButton.setOnAction(event -> {
+            stage.close();
+            // Restart the game by creating a new instance of GameStartScene
+            GameStartScene gameStartScene = new GameStartScene();
+            Stage newStage = new Stage();
+            gameStartScene.start(newStage);
+        });
+        mainContainer.getChildren().add(restartButton);
+
         Scene scene = new Scene(mainContainer, 900, 600);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm()); // Apply external CSS styling
         stage.setTitle("Game Over");
         stage.setScene(scene);
         stage.show();
@@ -79,20 +88,19 @@ public class GameOverScene extends Application {
         for (int i = 0; i < tasksForThisGame.size(); i++) {
             JudgeTask task = tasksForThisGame.get(i);
             int progressPercent = judgeTaskManager.calculateProgressPercent(task, taskStatus);
-            boolean isPassed = judgeTaskManager.decideIfPassed(progressPercent);
-            String verdictText = String.format("%s: %s (%d%% complete)", task.getDescription(), isPassed ? "Passed" : "Failed", progressPercent);
+            String verdictText = String.format("%s: (%d%% complete)", task.getDescription(), progressPercent);
 
             Label verdictLabel = new Label(verdictText);
             verdictLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
             tasksCompletedContainer.getChildren().add(verdictLabel);
 
-            // Анимируем от 0% до progressPercent
+            // Animate from 0% to progressPercent
             Timeline timeline = new Timeline();
-            final int totalFrames = progressPercent; // Количество кадров анимации равно проценту выполнения
+            final int totalFrames = progressPercent; // Number of animation frames equals progress percentage
             for (int frame = 0; frame <= totalFrames; frame++) {
                 int finalFrame = frame;
                 KeyFrame keyFrame = new KeyFrame(Duration.millis(frame * 20), e -> {
-                    verdictLabel.setText(String.format("%s: %s (%d%% complete)", task.getDescription(), isPassed ? "Passed" : "Failed", finalFrame));
+                    verdictLabel.setText(String.format("%s: (%d%% complete)", task.getDescription(), finalFrame));
                 });
                 timeline.getKeyFrames().add(keyFrame);
             }
@@ -109,10 +117,10 @@ public class GameOverScene extends Application {
     }
 
     private void displayFinalVerdict(VBox container, List<JudgeTask> tasks, JudgeTaskManager manager, TaskStatus status) {
-        int passedCount = 0; // Количество успешно выполненных задач
-        int failedCount = 0; // Количество не выполненных задач
+        int passedCount = 0; // Number of tasks successfully completed
+        int failedCount = 0; // Number of tasks failed
 
-        // Подсчет успешно выполненных и не выполненных задач
+        // Count successful and failed tasks
         for (JudgeTask task : tasks) {
             int progressPercent = manager.calculateProgressPercent(task, status);
             if (manager.decideIfPassed(progressPercent)) {
@@ -122,14 +130,14 @@ public class GameOverScene extends Application {
             }
         }
 
-        // Создание текста для отображения результатов
+        // Create text to display results
         String resultsText = String.format("Results: Passed %d, Failed %d", passedCount, failedCount);
         Label resultsLabel = new Label(resultsText);
         resultsLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
         container.getChildren().add(resultsLabel);
 
-        // Создание и отображение финального вердикта на основе результатов
-        String finalVerdictText = "Joint decision: " + (passedCount >= tasks.size() / 2 ? "Passed" : "Didn't pass");
+        // Create and display final verdict based on results
+        String finalVerdictText = "Joint decision: " + (passedCount > failedCount ? "Passed" : "Didn't pass");
         Label finalVerdictLabel = new Label(finalVerdictText);
         finalVerdictLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         finalVerdictLabel.setTextFill(Color.BLUE);

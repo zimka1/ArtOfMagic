@@ -1,7 +1,10 @@
 package GameScene;
 
+import GameScene.GameScene;
 import Judges.JudgeTask;
 import Judges.JudgeTaskManager;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,64 +12,78 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.List;
+import java.util.Random;
 
 public class GameStartScene extends Application {
-    private VBox tasksContainer; // Container specifically for tasks, allowing for easy refresh
-    private JudgeTaskManager taskManager = new JudgeTaskManager(); // Manages the logic behind assigning and reassigning tasks
+    private VBox tasksContainer;
+    private JudgeTaskManager taskManager = new JudgeTaskManager();
+    private Random random = new Random();
 
     List<JudgeTask> tasksForThisGame;
 
     @Override
     public void start(Stage primaryStage) {
-        VBox root = new VBox(15); // Main container for the scene
-        root.setAlignment(Pos.CENTER); // Ensure content is centered
+        VBox root = new VBox(15);
+        root.setAlignment(Pos.CENTER);
         root.getStyleClass().add("root");
 
-        // Initialize and set up the tasks container with central alignment
         tasksContainer = new VBox(10);
-        tasksContainer.setAlignment(Pos.CENTER); // Center tasks within this container
+        tasksContainer.setAlignment(Pos.CENTER);
 
-        displayTasks(); // Initially display tasks
+        displayTasks();
 
-        // Set up and add the 'Start the game' button
         Button startGameButton = new Button("Start the game");
         startGameButton.getStyleClass().add("button");
         startGameButton.setOnAction(event -> moveToGameScene(primaryStage));
 
-
-        // Set up and add the 'Reassign Tasks' button
         Button reassignTasksButton = new Button("Reassign Tasks");
         reassignTasksButton.getStyleClass().add("button");
-        reassignTasksButton.setOnAction(event -> displayTasks()); // Reassign and display new tasks on click
+        reassignTasksButton.setOnAction(event -> displayTasks());
 
-        // Adding the buttons directly to the root ensures they stay at the bottom and are not cleared with tasks
-        root.getChildren().addAll(tasksContainer, startGameButton, reassignTasksButton); // Add elements to the root container
+        root.getChildren().addAll(tasksContainer, startGameButton, reassignTasksButton);
 
         Scene scene = new Scene(root, 900, 600);
-        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm()); // Apply external CSS styling
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setTitle("Start Scene");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    // Displays or refreshes the tasks in the dedicated container
     private void displayTasks() {
-        tasksContainer.getChildren().clear(); // Clear current tasks before displaying new ones
+        tasksContainer.getChildren().clear();
 
         Label title = new Label("Tasks for this game:");
         title.getStyleClass().add("label-title");
-        tasksContainer.getChildren().addAll(title); // Add the title to the tasks container
+        tasksContainer.getChildren().add(title);
 
-        // Fetch and display a set of tasks, including the judge's name for each
         tasksForThisGame = taskManager.getRandomTasksForJudges();
         for (JudgeTask task : tasksForThisGame) {
             String taskText = task.getDescription() + " (Judge: " + task.getOwnerName() + ")";
-            Label taskLabel = new Label(taskText);
+            Label taskLabel = new Label();
             taskLabel.getStyleClass().add("task-label");
-            tasksContainer.getChildren().add(taskLabel); // Add each task label to the container
+            tasksContainer.getChildren().add(taskLabel);
+
+            animateTaskLabel(taskLabel, taskText);
         }
+    }
+
+    private void animateTaskLabel(Label label, String fullText) {
+        label.setText("");
+        Timeline timeline = new Timeline();
+
+        for (int i = 0; i < fullText.length(); i++) {
+            final int index = i;
+            KeyFrame keyFrame = new KeyFrame(Duration.seconds(index * 0.05), event -> {
+                String partialText = fullText.substring(0, index + 1);
+                label.setText(partialText);
+            });
+            timeline.getKeyFrames().add(keyFrame);
+        }
+
+        timeline.play();
     }
 
     private void moveToGameScene(Stage currentStage) {

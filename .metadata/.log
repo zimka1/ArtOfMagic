@@ -1,0 +1,31 @@
+!SESSION 2024-04-08 01:00:38.631 -----------------------------------------------
+eclipse.buildId=4.31.0.20240307-1200
+java.version=17.0.10
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/zimka/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/zimka/.eclipse_keyring
+
+!ENTRY ch.qos.logback.classic 1 0 2024-04-08 01:00:41.921
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2024-04-08 01:01:15.471
+!MESSAGE Logback config file: /Users/zimka/Desktop/OOP Project/AOM/ArtOfMagic/.metadata/.plugins/org.eclipse.m2e.logback/logback.2.6.0.20240217-1525.xml
+!SESSION 2024-04-08 01:12:18.131 -----------------------------------------------
+eclipse.buildId=4.31.0.20240307-1200
+java.version=17.0.10
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/zimka/.eclipse_keyring
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/zimka/.eclipse_keyring
+
+!ENTRY ch.qos.logback.classic 1 0 2024-04-08 01:12:21.921
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2024-04-08 01:12:35.578
+!MESSAGE Logback config file: /Users/zimka/Desktop/OOP Project/AOM/ArtOfMagic/.metadata/.plugins/org.eclipse.m2e.logback/logback.2.6.0.20240217-1525.xml
+
+!ENTRY org.eclipse.core.resources 2 2 2024-04-08 01:15:20.465
+!MESSAGE Save operation warnings.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2024-04-08 01:15:20.465
+!MESSAGE The project description file (.project) for 'art' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.

@@ -3,6 +3,9 @@ package GameScene;
 import Cards.Card;
 import Cards.CardLibrary;
 import Cards.CardView;
+import Cards.TypeOfCard.Card_Minion;
+import Cards.TypeOfCard.Card_Spell;
+import Cards.TypeOfCard.Card_Weapon;
 import Commands.*;
 import GameBoard.Board;
 import Judges.JudgeTask;
@@ -12,6 +15,7 @@ import Players.GameState;
 import Players.Player;
 import Players.PlayerTurnState;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 
 import java.util.*;
 
@@ -31,8 +35,11 @@ public class GameManager {
 
     private JudgeTaskManager taskManager = new JudgeTaskManager();
     private List<JudgeTask> tasksForThisGame;
+    private List<Observer> observers = new ArrayList<>();
+    private TextArea playerActionLog;
+    private TextArea opponentActionLog;
 
-    public GameManager(GameScene gameScene) {
+    public GameManager(GameScene gameScene, TextArea playerActionLog, TextArea opponentActionLog) {
         this.gameScene = gameScene;
         this.playerBoard = new Board(1);
         this.opponentBoard = new Board(2);
@@ -41,6 +48,11 @@ public class GameManager {
         this.isPlayerTurn = true;
         this.currentState = new PlayerTurnState();
         this.tasksForThisGame = gameScene.getTasksForThisGame();
+        this.playerActionLog = playerActionLog;
+        this.opponentActionLog = opponentActionLog;
+        Observer gameLogger = new GameLogger(playerActionLog, opponentActionLog);
+        registerObserver(gameLogger);
+
     }
 
     // getters
@@ -92,10 +104,24 @@ public class GameManager {
         this.selectedCardForAttack = selectedCardForAttack;
     }
 
+    public void registerObserver(Observer o) {
+        if (o == null) {
+            throw new NullPointerException("Observer cannot be null");
+        }
+        if (!observers.contains(o)) {
+            observers.add(o);
+        }
+    }
 
 
     public void startTurn(Button endTurnButton) {
         currentState.handleStartOfTurn(this, endTurnButton);
+    }
+
+    public void notifyObservers(String event, String playerType) {
+        for (Observer observer : observers) {
+            observer.update(event, playerType);
+        }
     }
 
     public void executeCommand(GameCommand command) {
@@ -105,12 +131,15 @@ public class GameManager {
     public void drawCardForPlayer(Player toWhom, Board whoseBoard) {
         DrawCardCommand drawCommand = new DrawCardCommand(toWhom, whoseBoard, gameScene);
         executeCommand(drawCommand);
+        String playerType = toWhom.getWhose() == 1 ? "Player" : "Opponent";
+        notifyObservers(playerType + " drew a card", playerType);
     }
 
     public void executeAttack(CardView attacker, CardView target) {
         AttackCardCommand attackCardCommand = new AttackCardCommand(attacker, target, this, gameScene);
         executeCommand(attackCardCommand);
-
+        String playerType = this.getPlayerTurn() ? "Player" : "Opponent";
+        notifyObservers("<" + attacker.getCard().getName() + "> attacked <" + target.getCard().getName() + ">", playerType);
     }
 
     public void updateMana(){
@@ -125,12 +154,25 @@ public class GameManager {
     public void clickedOnHand(CardView cardView, Player whichPlayer, Board whoseBoard, int mana){
         PlayCardCommand playCardCommand = new PlayCardCommand(cardView, whichPlayer, whoseBoard, mana, this, gameScene);
         executeCommand(playCardCommand);
+        if (cardView.getCard().getManaCost() > whichPlayer.getNowMana()){
+            String playerType = whichPlayer.getWhose() == 1 ? "Player" : "Opponent";
+            notifyObservers("You don't have enough mana!", playerType);
+        }
+        else if (cardView.getCard() instanceof Card_Minion){
+            String playerType = whichPlayer.getWhose() == 1 ? "Player" : "Opponent";
+            notifyObservers("Put the card <" + cardView.getCard().getName() + "> on the table", playerType);
+        }
     }
 
     public void clickedOnPlayer(Player attackingPlayer, Player defendingPlayer, Board attackingBoard){
         if (selectedCardForAttack != null){
             AttackPlayerCommand attackPlayerCommand = new AttackPlayerCommand(attackingPlayer, defendingPlayer, attackingBoard, this, gameScene);
             executeCommand(attackPlayerCommand);
+            if (selectedCardForAttack.getCard() instanceof Card_Spell || selectedCardForAttack.getCard() instanceof Card_Minion) {
+                String attackingPlayerType = attackingPlayer.getWhose() == 1 ? "Player" : "Opponent";
+                String defendingPlayerType = defendingPlayer.getWhose() == 1 ? "Player" : "Opponent";
+                notifyObservers(defendingPlayerType + " was attacked by <" + selectedCardForAttack.getCard().getName() + ">", attackingPlayerType);
+            }
         }
     }
 

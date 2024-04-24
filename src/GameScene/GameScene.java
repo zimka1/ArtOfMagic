@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -26,7 +27,6 @@ import java.util.List;
 
 
 public class GameScene extends Application {
-    private final GameManager gameManager = new GameManager(this);
     private PlayerCardView playerCardView;
     private PlayerCardView opponentCardView;
 
@@ -40,6 +40,7 @@ public class GameScene extends Application {
     private HBox opponentHandContainer;
     private HBox playerBoardContainer;
     private HBox opponentBoardContainer;
+    private VBox graveyardsContainer;
     private HBox playerGraveyardContainer;
     private HBox opponentGraveyardContainer;
     private VBox decksContainer;
@@ -66,6 +67,13 @@ public class GameScene extends Application {
         return tasksForThisGame;
     }
 
+    private TextArea playerActionLog;
+    private TextArea opponentActionLog;
+
+
+    private GameManager gameManager;
+
+
     @Override
     public void start(Stage primaryStage) {
         initializeComponents();
@@ -74,6 +82,8 @@ public class GameScene extends Application {
         startGame(primaryStage);
     }
     private void initializeComponents() {
+        initializeActionLog();
+        gameManager = new GameManager(this, playerActionLog, opponentActionLog);
         initializeViews();
         initializeContainers();
         initializeButtons();
@@ -90,10 +100,11 @@ public class GameScene extends Application {
         opponentHandContainer = new HBox(10);
         playerBoardContainer = new HBox(10);
         opponentBoardContainer = new HBox(10);
+        graveyardsContainer = new VBox(5);
         playerGraveyardContainer = new HBox(10);
         opponentGraveyardContainer = new HBox(10);
         decksContainer = new VBox(20);
-        leftSideContainer = new VBox(20);
+        leftSideContainer = new VBox(50);
         rightSideContainer = new VBox(20);
         topSideContainer = new VBox(20);
         bottomSideContainer = new VBox(20);
@@ -131,6 +142,20 @@ public class GameScene extends Application {
         opponentDeckCountLabel.setVisible(false);
     }
 
+    private void initializeActionLog() {
+        playerActionLog = new TextArea();
+        playerActionLog.setEditable(false);
+        playerActionLog.setWrapText(true);
+        playerActionLog.setMaxHeight(130);
+        playerActionLog.setMaxWidth(400);
+
+        opponentActionLog = new TextArea();
+        opponentActionLog.setEditable(false);
+        opponentActionLog.setWrapText(true);
+
+        opponentActionLog.setMaxHeight(130);
+        opponentActionLog.setMaxWidth(400);
+    }
 
     private void configureLayout() {
 
@@ -147,7 +172,10 @@ public class GameScene extends Application {
         // Configure container relationships
         decksContainer.getChildren().addAll(opponentDeckButton, endTurnButton, playerDeckButton);
         rightSideContainer.getChildren().addAll(opponentCardView, opponentDeckCountLabel,opponentManaLabel, decksContainer, playerManaLabel, playerDeckCountLabel, playerCardView);
-        leftSideContainer.getChildren().addAll(opponentGraveyardContainer, playerGraveyardContainer);
+        leftSideContainer.getChildren().add(opponentActionLog);
+        graveyardsContainer.getChildren().addAll(opponentGraveyardContainer, playerGraveyardContainer);
+        leftSideContainer.getChildren().add(graveyardsContainer);
+        leftSideContainer.getChildren().add(playerActionLog);
         topSideContainer.getChildren().addAll(opponentHandContainer);
         bottomSideContainer.getChildren().addAll(playerHandContainer);
         centerContainer.getChildren().addAll(opponentBoardContainer, playerBoardContainer);

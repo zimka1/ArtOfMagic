@@ -9,6 +9,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
+
+/**
+ * Visual representation of a card in a card game. This class is responsible for
+ * displaying card properties such as name, mana cost, power, and additional attributes like
+ * health points or weapon enhancements, if applicable.
+ */
 public class CardView extends StackPane {
     private Card card;
     private Card weapon;
@@ -20,10 +26,22 @@ public class CardView extends StackPane {
     private Label NumberOfUsesLabel;
     private ImageView artwork;
 
+
+    /**
+     * Constructs a CardView for a card without a weapon.
+     *
+     * @param card The card to display.
+     */
     public CardView(Card card) {
         this.card = card;
         initializeCardUI();
     }
+    /**
+     * Constructs a CardView for a card with an associated weapon.
+     *
+     * @param card The card to display.
+     * @param weapon The weapon associated with the card.
+     */
     public CardView(Card card, Card weapon) {
         this.card = card;
         this.weapon = weapon;
@@ -35,6 +53,11 @@ public class CardView extends StackPane {
     }
     public Card getWeapon(){return weapon;}
 
+
+    /**
+     * Initializes the user interface components of the card view, setting up labels
+     * and styles for displaying the card's attributes.
+     */
     private void initializeCardUI() {
         Rectangle background = new Rectangle(100, 120);
         background.getStyleClass().add("card-background");

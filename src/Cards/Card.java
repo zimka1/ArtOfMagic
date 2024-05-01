@@ -8,6 +8,11 @@ import Players.Hand;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+/**
+ * Represents a card in a game, encompassing all properties and behaviors including attack mechanics,
+ * health points, mana cost, and interactions with weapons.
+ */
 public class Card {
     private String name;
     private int manaCost;
@@ -22,6 +27,14 @@ public class Card {
     private Card weapon = null;
     private int numberOfUses = 0;
 
+    /**
+     * Constructs a card with specified attributes.
+     *
+     * @param name The name of the card.
+     * @param manaCost The mana cost required to play the card.
+     * @param power The attack power of the card.
+     * @param whose The player identifier this card belongs to.
+     */
     public Card(String name, int manaCost, int power, int whose) {
         setName(name);
         setManaCost(manaCost);
@@ -29,6 +42,12 @@ public class Card {
         setWhose(whose);
         setID(generateSHA256Hash(name + manaCost + power + whose));
     }
+    /**
+     * Generates a SHA-256 hash of the given string.
+     *
+     * @param data String to hash.
+     * @return A hexadecimal string representation of the hash.
+     */
     private String generateSHA256Hash(String data) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -96,9 +115,22 @@ public class Card {
     public void setAlreadyAttacked(int flag){alreadyAttacked = flag;}
 
 
+    /**
+     * Handles the card receiving damage.
+     *
+     * @param damage The amount of damage the card takes.
+     */
     public void takingDamage(int damage){
         this.nowHP -= damage;
     }
+
+    /**
+     * Handles the logic for this card attacking another card.
+     *
+     * @param opponents_card The card being attacked.
+     * @param yourBoard The board of the attacking card.
+     * @param opponents_Board The board of the defending card.
+     */
     public void attackCard(Card opponents_card, Board yourBoard, Board opponents_Board){
         if (this.getWeapon() != null){
             System.out.println(this.getWeapon().getPower());
@@ -121,6 +153,11 @@ public class Card {
             opponents_card.death(opponents_Board);
         }
     }
+    /**
+     * Handles the card's response to being attacked.
+     *
+     * @param opponents_card The attacking card.
+     */
     public void attackInResponse(Card opponents_card){
         if (this.weapon != null){
             opponents_card.takingDamage(this.getPower() + this.weapon.getPower());
@@ -129,15 +166,26 @@ public class Card {
             opponents_card.takingDamage(this.getPower());
         }
     }
+    /**
+     * Resets the card's health to its initial state.
+     */
     public void restoringValues(){
         this.nowHP = this.getHp();
     }
 
+    /**
+     * Handles the card's death, removing it from the board and sending it to the graveyard.
+     *
+     * @param board The board from which the card will be removed.
+     */
     public void death(Board board){
         board.removeCard(this.getID());
         this.restoringValues();
         board.getGraveyard().sendCardToGraveyard(this);
     }
+    /**
+     * Outputs the card's details to the system output.
+     */
     public void getInfo(){
         System.out.println("Card name: " + this.name + "\nManacost: " + this.manaCost + "\nPower: " + this.power + "\nID" + this.ID + "\n");
     }

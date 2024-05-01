@@ -19,6 +19,10 @@ import javafx.util.Duration;
 
 import java.util.List;
 
+/**
+ * A scene representing the end of the game, displaying the game result, task verdicts, and an option to restart the game.
+ * This scene provides visual feedback on the game outcome, task completion progress, and final verdict based on task results.
+ */
 public class GameOverScene extends Application {
 
     GameManager gameManager;
@@ -34,6 +38,13 @@ public class GameOverScene extends Application {
         this.taskStatus = taskStatus;
         this.tasksForThisGame = tasksForThisGame;
     }
+
+    /**
+     * Initializes and displays the game over scene with game result, task verdicts, and restart option.
+     * This method sets up the UI components for displaying the game result, progress of completed tasks, and an option to restart the game.
+     *
+     * @param stage The primary stage where the game over scene will be displayed.
+     */
 
     @Override
     public void start(Stage stage) {
@@ -81,6 +92,9 @@ public class GameOverScene extends Application {
         stage.show();
     }
 
+    /**
+     * Displays the progress and verdicts of tasks completed during the game.
+     */
     private void displayTasksProgressAndVerdicts() {
         tasksCompletedContainer.getChildren().add(new Label("Task Verdicts:"));
         final int[] animationsCompleted = {0};
@@ -116,6 +130,14 @@ public class GameOverScene extends Application {
         }
     }
 
+    /**
+     * Displays the final verdict based on the results of all tasks completed during the game.
+     *
+     * @param container The container in which to display the final verdict.
+     * @param tasks     The list of tasks relevant to the game.
+     * @param manager   The JudgeTaskManager for calculating progress and making decisions.
+     * @param status    The status of tasks completed during the game.
+     */
     private void displayFinalVerdict(VBox container, List<JudgeTask> tasks, JudgeTaskManager manager, TaskStatus status) {
         int passedCount = 0; // Number of tasks successfully completed
         int failedCount = 0; // Number of tasks failed

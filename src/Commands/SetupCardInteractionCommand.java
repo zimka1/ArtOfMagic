@@ -5,19 +5,37 @@ import Cards.TypeOfCard.Card_Weapon;
 import GameScene.*;
 import Judges.TaskStatus;
 
-public class SetupCardInteractionCommand implements GameCommand{
+/**
+ * Command to handle the initial interaction setup for a card when selected.
+ * This command is responsible for preparing and applying weapon effects to cards,
+ * handling the selection of cards for potential attacks, and managing mana costs.
+ */
+public class SetupCardInteractionCommand implements GameCommand {
 
     private CardView cardView;
-
     private GameManager gameManager;
     private GameScene gameScene;
 
-    public SetupCardInteractionCommand(CardView cardView, GameManager gameManager, GameScene gameScene){
+    /**
+     * Constructs a new command for setting up card interactions.
+     *
+     * @param cardView    The card view that is being interacted with.
+     * @param gameManager The game manager to access game state and control flow.
+     * @param gameScene   The game scene to update visual components.
+     */
+    public SetupCardInteractionCommand(CardView cardView, GameManager gameManager, GameScene gameScene) {
         this.cardView = cardView;
         this.gameManager = gameManager;
         this.gameScene = gameScene;
     }
 
+    /**
+     * Executes the setup interaction for a card. This includes equipping weapons,
+     * selecting cards for attack, or initiating attacks based on the current game state
+     * and the properties of the selected card.
+     *
+     * @param taskStatus The task status object to be updated based on the interactions.
+     */
     public void execute(TaskStatus taskStatus) {
         CardView selectedCardForAttack = gameManager.getSelectedCardForAttack();
 

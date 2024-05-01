@@ -26,6 +26,11 @@ import javafx.util.Duration;
 import java.util.List;
 
 
+/**
+ * The {@code GameScene} class represents the main gameplay scene of the application.
+ * This class sets up the user interface for the game, including areas for player hands, boards,
+ * decks, and graveyards. It also manages user interactions and updates the game state accordingly.
+ */
 public class GameScene extends Application {
     private PlayerCardView playerCardView;
     private PlayerCardView opponentCardView;
@@ -59,10 +64,19 @@ public class GameScene extends Application {
 
     private List<JudgeTask> tasksForThisGame;
 
+    /**
+     * Constructs a new GameScene with the specified tasks.
+     * @param tasksForThisGame a list of tasks to be displayed or interacted with during the game
+     */
+
     public GameScene(List<JudgeTask> tasksForThisGame) {
         this.tasksForThisGame = tasksForThisGame;
     }
 
+    /**
+     * Retrieves the list of judge tasks associated with this game.
+     * @return a list of JudgeTask objects
+     */
     public List<JudgeTask> getTasksForThisGame() {
         return tasksForThisGame;
     }
@@ -74,6 +88,11 @@ public class GameScene extends Application {
     private GameManager gameManager;
 
 
+    /**
+     * Initializes components, configures layout, sets styles, and starts the game.
+     * This method is called as the entry point for launching the JavaFX application.
+     * @param primaryStage the primary stage for this application.
+     */
     @Override
     public void start(Stage primaryStage) {
         initializeComponents();
@@ -81,6 +100,10 @@ public class GameScene extends Application {
         setStyles();
         startGame(primaryStage);
     }
+
+    /**
+     * Initializes all visual components, sets up action handlers and links components to the game manager.
+     */
     private void initializeComponents() {
         initializeActionLog();
         gameManager = new GameManager(this, playerActionLog, opponentActionLog);
@@ -142,6 +165,9 @@ public class GameScene extends Application {
         opponentDeckCountLabel.setVisible(false);
     }
 
+    /**
+     * Initializes and displays action logs for player and opponent.
+     */
     private void initializeActionLog() {
         playerActionLog = new TextArea();
         playerActionLog.setEditable(false);
@@ -157,6 +183,9 @@ public class GameScene extends Application {
         opponentActionLog.setMaxWidth(400);
     }
 
+    /**
+     * Sets up containers and layouts for different sections of the game UI.
+     */
     private void configureLayout() {
 
 
@@ -186,6 +215,9 @@ public class GameScene extends Application {
         centerContainer.setSpacing(20);
     }
 
+    /**
+     * Applies CSS styles to components.
+     */
     private void setStyles() {
         // Apply CSS and class styles
         String css = this.getClass().getResource("/style.css").toExternalForm();
@@ -194,6 +226,11 @@ public class GameScene extends Application {
         playerBoardContainer.setMaxWidth(700);
         opponentBoardContainer.setMaxWidth(700);
     }
+
+    /**
+     * Starts the game logic and displays the primary stage with all UI components.
+     * @param primaryStage the primary stage to be set and shown.
+     */
 
     private void startGame(Stage primaryStage) {
 
@@ -221,25 +258,36 @@ public class GameScene extends Application {
     }
 
 
+    /**
+     * Begins the game by setting up the initial state, including drawing initial cards,
+     * setting mana levels, and restoring game values. It also updates the UI to reflect the
+     * current game state and starts the player's turn.
+     */
     private void beginGame() {
         gameManager.setupGame();
         gameManager.drawInitialCards();
         gameManager.getPlayer().setNowMana();
         gameManager.getOpponent().setNowMana();
         gameManager.restoringValues(gameManager.getPlayerBoard(), gameManager.getOpponentBoard());
-        allUpdatesForBegining();
+        allUpdatesForBeginning();
         gameManager.startTurn(endTurnButton);
     }
 
-
-
-    public void allUpdatesForBegining(){
+    /**
+     * Updates all UI components relevant at the beginning of the game. This includes mana levels,
+     * player views, and hands for both the player and the opponent.
+     */
+    public void allUpdatesForBeginning() {
         updateManaLabels();
         updatePlayerViews();
         updateHandDisplay(gameManager.getPlayer());
         updateHandDisplay(gameManager.getOpponent());
     }
 
+    /**
+     * Updates the player views with interaction capabilities and checks for game-over conditions.
+     * It refreshes the display based on interactions and changes in player health.
+     */
     public void updatePlayerViews() {
         playerCardView.setOnMouseClicked(e -> {
             gameManager.clickedOnPlayer(gameManager.getOpponent(), gameManager.getPlayer(), gameManager.getOpponentBoard());
@@ -248,7 +296,6 @@ public class GameScene extends Application {
         });
         opponentCardView.setOnMouseClicked(e -> {
             gameManager.clickedOnPlayer(gameManager.getPlayer(), gameManager.getOpponent(), gameManager.getPlayerBoard());
-
             updatePlayerViews();
             updateBoardDisplay(gameManager.getPlayerBoard());
         });
@@ -256,60 +303,52 @@ public class GameScene extends Application {
         opponentCardView.updateHP(gameManager.getOpponent().getNowHP());
 
         if (gameManager.getPlayer().getNowHP() <= 0 || gameManager.getOpponent().getNowHP() <= 0) {
-                moveToGameOverScene();
+            moveToGameOverScene();
         }
     }
 
+    /**
+     * Transitions the application to the game over scene if one of the players' health reaches zero.
+     */
     private void moveToGameOverScene() {
         try {
             Stage stage = (Stage) centerContainer.getScene().getWindow();
-            // Assuming GameScene is your class that sets up the game scene
             GameOverScene gameOverScene = new GameOverScene(gameManager, gameManager.taskStatus, tasksForThisGame);
-            // Close the current window
-            // Set up a new stage for the game scene
-            Stage newStage = new Stage();
             stage.setFullScreen(false);
-            gameOverScene.start(newStage);
+            gameOverScene.start(new Stage());
             stage.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
+    /**
+     * Updates the display of cards in a player's hand, enabling card interaction based on the current turn.
+     *
+     * @param player the player whose hand is being displayed.
+     */
     public void updateHandDisplay(Player player) {
-        if (player == gameManager.getPlayer()) {
-            playerHandContainer.getChildren().clear();
-            for (Card card : player.getHand().getCards()) {
-                CardView cardView = new CardView(card);
-                playerHandContainer.getChildren().add(cardView);
-                cardView.setOnMouseClicked(e -> {
-                    if (gameManager.getPlayerTurn()){
-                        gameManager.clickedOnHand(cardView, gameManager.getPlayer(), gameManager.getPlayerBoard(), gameManager.getPlayer().getNowMana());
-                    }
-                    else{
-                        showTemporaryTooltip(cardView, "You cannot use the opponent's cards during your turn!");
-                    }
-                });
-
-            }
-        } else {
-            opponentHandContainer.getChildren().clear();
-            for (Card card : player.getHand().getCards()) {
-                CardView cardView = new CardView(card);
-                opponentHandContainer.getChildren().add(cardView);
-                cardView.setOnMouseClicked(e -> {
-                    if (!gameManager.getPlayerTurn()) {
-                        gameManager.clickedOnHand(cardView, gameManager.getOpponent(), gameManager.getOpponentBoard(), gameManager.getOpponent().getNowMana());
-                    }
-                    else{
-                        showTemporaryTooltip(cardView, "You cannot use the opponent's cards during your turn!");
-                    }
-                });
-
-            }
+        HBox currentContainer = player == gameManager.getPlayer() ? playerHandContainer : opponentHandContainer;
+        currentContainer.getChildren().clear();
+        for (Card card : player.getHand().getCards()) {
+            CardView cardView = new CardView(card);
+            currentContainer.getChildren().add(cardView);
+            cardView.setOnMouseClicked(e -> {
+                if (player == gameManager.getPlayer() && gameManager.getPlayerTurn() || player != gameManager.getPlayer() && !gameManager.getPlayerTurn()) {
+                    gameManager.clickedOnHand(cardView, player, player == gameManager.getPlayer() ? gameManager.getPlayerBoard() : gameManager.getOpponentBoard(), player.getNowMana());
+                } else {
+                    showTemporaryTooltip(cardView, "You cannot use the opponent's cards during your turn!");
+                }
+            });
         }
     }
+
+    /**
+     * Displays a temporary tooltip above a given UI node.
+     *
+     * @param anchor  the node above which the tooltip will be shown.
+     * @param message the message to display in the tooltip.
+     */
     private void showTemporaryTooltip(Node anchor, String message) {
         Tooltip tooltip = new Tooltip(message);
         tooltip.setAutoHide(true);
@@ -322,13 +361,23 @@ public class GameScene extends Application {
         delay.play();
     }
 
-    public void updateManaLabels() {
-        playerManaLabel.setText(gameManager.getPlayer().getNowMana() + "/" + gameManager.getPlayer().getMana());
-        opponentManaLabel.setText(gameManager.getOpponent().getNowMana() + "/" + gameManager.getOpponent().getMana());
 
+    /**
+     * Updates the mana display labels for both the player and the opponent.
+     */
+    public void updateManaLabels() {
+        playerManaLabel.setText(String.format("%d/%d", gameManager.getPlayer().getNowMana(), gameManager.getPlayer().getMana()));
+        opponentManaLabel.setText(String.format("%d/%d", gameManager.getOpponent().getNowMana(), gameManager.getOpponent().getMana()));
         playerManaLabel.setFont(new Font("Arial", 14));
         opponentManaLabel.setFont(new Font("Arial", 14));
     }
+
+    /**
+     * Updates the display of cards on the board for a specified board.
+     *
+     * @param board the board whose display is to be updated.
+     */
+
     public void updateBoardDisplay(Board board) {
         HBox currentContainer = board == gameManager.getPlayerBoard() ? playerBoardContainer : opponentBoardContainer;
         currentContainer.getChildren().clear();
@@ -355,16 +404,27 @@ public class GameScene extends Application {
             });
         }
     }
+    /**
+     * Updates the display of the graveyard for a given board. This method clears the current graveyard display
+     * and then shows the top card in the graveyard if it is not empty.
+     *
+     * @param board The game board whose graveyard display is to be updated. This can be either the player's or the opponent's board.
+     */
     public void updateGraveyardDisplay(Board board) {
+        // Determine the appropriate container for the graveyard based on whether it's the player's or the opponent's board.
         HBox currentContainer = board == gameManager.getPlayerBoard() ? playerGraveyardContainer : opponentGraveyardContainer;
-        currentContainer.getChildren().clear();
-        if (!board.getGraveyard().getCards().isEmpty()) {
 
-            Card topCard = board.getGraveyard().getCards().getLast();
-            CardView cardView = new CardView(topCard);
-            currentContainer.getChildren().add(cardView);
+        // Clear any existing content in the graveyard display.
+        currentContainer.getChildren().clear();
+
+        // Check if the graveyard has any cards. If it does, display the last card added (top card of the graveyard).
+        if (!board.getGraveyard().getCards().isEmpty()) {
+            Card topCard = board.getGraveyard().getCards().getLast(); // Get the last card in the graveyard list, which is the top card.
+            CardView cardView = new CardView(topCard); // Create a view for the top card.
+            currentContainer.getChildren().add(cardView); // Add the card view to the container for display.
         }
     }
+
 
 
 

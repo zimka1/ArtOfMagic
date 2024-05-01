@@ -4,6 +4,10 @@ import Cards.TypeOfCard.Card_Minion;
 import Cards.TypeOfCard.Card_Spell;
 import Cards.TypeOfCard.Card_Weapon;
 
+/**
+ * Provides a static library of card definitions for players and opponents in the game.
+ * This class contains predefined arrays of minion, spell, and weapon cards.
+ */
 public class CardLibrary {
     // Массивы карт для игрока
     public static final Card_Minion[] playerMinions = {

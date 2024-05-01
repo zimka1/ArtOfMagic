@@ -5,19 +5,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-// JudgeTaskManager is responsible for managing judge tasks and determining whether they have been passed.
+/**
+ * Manages judge tasks and evaluates their completion during the game.
+ * This class is responsible for initializing, selecting, and assessing the completion of various tasks.
+ */
 public class JudgeTaskManager {
 
     private Random random = new Random();
     private List<JudgeTask> tasks = new ArrayList<>();
     private static final int NUMBER_OF_JUDGES = 3; // Constant to define how many judges or tasks will be selected.
 
-    // Constructor initializes the list of tasks.
+    /**
+     * Initializes the JudgeTaskManager by loading predefined tasks.
+     */
     public JudgeTaskManager() {
         initializeTasks();
     }
 
-    // initializeTasks adds predefined tasks to the tasks list.
+    /**
+     * Initializes predefined tasks and adds them to the task list.
+     */
     private void initializeTasks() {
         tasks.add(new JudgeTask(1, "Use at least 5 spell cards", "Zephyr"));
         tasks.add(new JudgeTask(2, "Don't lose more than 5 health per game", "Eldrin"));
@@ -28,36 +35,24 @@ public class JudgeTaskManager {
         tasks.add(new JudgeTask(7, "Win a game with full health", "Gavriel"));
     }
 
-    // getRandomTasksForJudges shuffles the tasks and returns a subset for the current game.
+    /**
+     * Randomly selects a subset of tasks for the judges in the current game.
+     *
+     * @return A list containing a random subset of judge tasks.
+     */
     public List<JudgeTask> getRandomTasksForJudges() {
         List<JudgeTask> shuffledTasks = new ArrayList<>(tasks);
         Collections.shuffle(shuffledTasks);
         return shuffledTasks.subList(0, NUMBER_OF_JUDGES);
     }
 
-    // checkTasksProgressAndVerdicts calculates the completion percentage for each task and decides if they are passed.
-    public List<String> checkTasksProgressAndVerdicts(TaskStatus status, List<JudgeTask> judgeTasks) {
-        List<String> tasksVerdicts = new ArrayList<>();
-        int passed = 0, failed = 0;
-
-        for (JudgeTask task : judgeTasks) {
-            int progressPercent = calculateProgressPercent(task, status);
-            boolean isPassed = decideIfPassed(progressPercent);
-            String verdict = isPassed ? "Passed" : "Failed";
-
-            if (isPassed) passed++;
-            else failed++;
-
-            tasksVerdicts.add(String.format("%s: %s (%d%% complete)", task.getDescription(), verdict, progressPercent));
-        }
-
-        // Adds a summary of how many tasks were passed and how many failed.
-        tasksVerdicts.add(String.format("Total: Passed %d, Failed %d", passed, failed));
-        tasksVerdicts.add(String.format("Joint decision : " + (passed > failed ? "Passed" : "Didn't pass")));
-        return tasksVerdicts;
-    }
-
-    // calculateProgressPercent calculates the percentage of completion for a given task based on the game's TaskStatus.
+    /**
+     * Calculates the percentage of completion for a given task based on the game's TaskStatus.
+     *
+     * @param task   The task for which progress is calculated.
+     * @param status The current status of the game tasks.
+     * @return The completion percentage of the task.
+     */
     public int calculateProgressPercent(JudgeTask task, TaskStatus status) {
         switch (task.getId()) {
             case 1:
@@ -78,7 +73,12 @@ public class JudgeTaskManager {
                 return 0; // Default return for unimplemented tasks
         }
     }
-    // decideIfPassed determines if the task is considered passed based on a random threshold compared to the progress percentage.
+    /**
+     * Determines if a task is considered passed based on a random threshold compared to the progress percentage.
+     *
+     * @param progressPercent The completion percentage of the task.
+     * @return True if the task is considered passed, otherwise false.
+     */
     public boolean decideIfPassed(int progressPercent) {
         int threshold = random.nextInt(100) + 1; // Generates a random threshold between 1 and 100.
         return progressPercent >= threshold; // The task passes if the completion percentage is greater than the threshold.

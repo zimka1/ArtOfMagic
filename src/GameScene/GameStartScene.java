@@ -6,6 +6,7 @@ import Judges.JudgeTaskManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -69,8 +70,9 @@ public class GameStartScene extends Application {
     }
 
     /**
-     * Displays the list of tasks for the game in the UI.
-     * Each task is animated to appear one character at a time.
+     * Displays the list of tasks asynchronously in the UI, ensuring the interface remains responsive.
+     * Tasks are retrieved in a background thread and then displayed one character at a time using animations.
+     * The method updates the UI on the JavaFX Application thread for thread safety and responsiveness.
      */
     private void displayTasks() {
         tasksContainer.getChildren().clear();
@@ -79,16 +81,21 @@ public class GameStartScene extends Application {
         title.getStyleClass().add("label-title");
         tasksContainer.getChildren().add(title);
 
-        tasksForThisGame = taskManager.getRandomTasksForJudges();
-        for (JudgeTask task : tasksForThisGame) {
-            String taskText = task.getDescription() + " (Judge: " + task.getOwnerName() + ")";
-            Label taskLabel = new Label();
-            taskLabel.getStyleClass().add("task-label");
-            tasksContainer.getChildren().add(taskLabel);
-
-            animateTaskLabel(taskLabel, taskText);
-        }
+        new Thread(() -> {
+            List<JudgeTask> tasks = taskManager.getRandomTasksForJudges();
+            Platform.runLater(() -> {
+                tasksForThisGame = tasks;
+                for (JudgeTask task : tasksForThisGame) {
+                    String taskText = task.getDescription() + " (Judge: " + task.getOwnerName() + ")";
+                    Label taskLabel = new Label();
+                    taskLabel.getStyleClass().add("task-label");
+                    tasksContainer.getChildren().add(taskLabel);
+                    animateTaskLabel(taskLabel, taskText);
+                }
+            });
+        }).start();
     }
+
 
     /**
      * Animates the display of each task label by gradually appending characters

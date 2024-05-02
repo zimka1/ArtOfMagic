@@ -47,6 +47,34 @@ public class JudgeTaskManager {
     }
 
     /**
+     * Checks the progress of judge tasks based on the current game status and calculates verdicts.
+     *
+     * @param status The current status of the game tasks.
+     * @param judgeTasks The tasks to be checked.
+     * @return A list of strings describing the progress and verdict for each task.
+     */
+    public List<String> checkTasksProgressAndVerdicts(TaskStatus status, List<JudgeTask> judgeTasks) {
+        List<String> tasksVerdicts = new ArrayList<>();
+        int passed = 0, failed = 0;
+
+        for (JudgeTask task : judgeTasks) {
+            int progressPercent = calculateProgressPercent(task, status);
+            boolean isPassed = decideIfPassed(progressPercent);
+            String verdict = isPassed ? "Passed" : "Failed";
+
+            if (isPassed) passed++;
+            else failed++;
+
+            tasksVerdicts.add(String.format("%s: %s (%d%% complete)", task.getDescription(), verdict, progressPercent));
+        }
+
+        // Adds a summary of how many tasks were passed and how many failed.
+        tasksVerdicts.add(String.format("Total: Passed %d, Failed %d", passed, failed));
+        tasksVerdicts.add(String.format("Joint decision : " + (passed > failed ? "Passed" : "Didn't pass")));
+        return tasksVerdicts;
+    }
+
+    /**
      * Calculates the percentage of completion for a given task based on the game's TaskStatus.
      *
      * @param task   The task for which progress is calculated.

@@ -1,6 +1,5 @@
 package GameScene;
 
-import GameScene.GameScene;
 import Judges.JudgeTask;
 import Judges.JudgeTaskManager;
 import javafx.animation.KeyFrame;
@@ -9,6 +8,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -22,17 +22,15 @@ import java.util.Random;
  * The {@code GameStartScene} class is responsible for setting up and displaying
  * the initial game start scene for the application. This scene allows users to
  * view and reassign tasks before starting the game.
- * <p>
- * This class extends {@link javafx.application.Application} and sets up a simple
- * GUI using JavaFX that includes buttons for starting the game and reassigning tasks,
- * as well as displaying the list of tasks assigned to judges.
  */
 public class GameStartScene extends Application {
     private VBox tasksContainer; // Container for displaying tasks.
     private JudgeTaskManager taskManager = new JudgeTaskManager(); // Manages judge tasks.
     private Random random = new Random();
 
-    List<JudgeTask> tasksForThisGame; // Holds the tasks assigned for the current game.
+    private List<JudgeTask> tasksForThisGame; // Holds the tasks assigned for the current game.
+    private int reassignmentCount = 0; // Tracks the number of task reassignments.
+    private final int MAX_REASSIGNMENTS = 3; // Maximum allowed task reassignments.
 
     /**
      * Starts and displays the primary stage with necessary UI components.
@@ -58,7 +56,14 @@ public class GameStartScene extends Application {
 
         Button reassignTasksButton = new Button("Reassign Tasks");
         reassignTasksButton.getStyleClass().add("button");
-        reassignTasksButton.setOnAction(event -> displayTasks());
+        reassignTasksButton.setOnAction(event -> {
+            if (reassignmentCount < MAX_REASSIGNMENTS) {
+                displayTasks();
+                reassignmentCount++;
+            } else {
+                handleReassignmentError();
+            }
+        });
 
         root.getChildren().addAll(tasksContainer, startGameButton, reassignTasksButton);
 
@@ -70,9 +75,7 @@ public class GameStartScene extends Application {
     }
 
     /**
-     * Displays the list of tasks asynchronously in the UI, ensuring the interface remains responsive.
-     * Tasks are retrieved in a background thread and then displayed one character at a time using animations.
-     * The method updates the UI on the JavaFX Application thread for thread safety and responsiveness.
+     * Displays the list of tasks for the game in the UI and handles reassignment.
      */
     private void displayTasks() {
         tasksContainer.getChildren().clear();
@@ -92,10 +95,14 @@ public class GameStartScene extends Application {
                     tasksContainer.getChildren().add(taskLabel);
                     animateTaskLabel(taskLabel, taskText);
                 }
+                String reassignments_Text = "!!! YOU HAVE " + (MAX_REASSIGNMENTS -  reassignmentCount) + (MAX_REASSIGNMENTS -  reassignmentCount != 1 ? " REASSIGNMENTS !!!" : " REASSIGNMENT !!!");
+                Label MAX_REASSIGNMENTS_Lable = new Label();
+                MAX_REASSIGNMENTS_Lable.getStyleClass().add("task-label");
+                tasksContainer.getChildren().add(MAX_REASSIGNMENTS_Lable);
+                animateTaskLabel(MAX_REASSIGNMENTS_Lable, reassignments_Text);
             });
         }).start();
     }
-
 
     /**
      * Animates the display of each task label by gradually appending characters
@@ -107,7 +114,6 @@ public class GameStartScene extends Application {
     private void animateTaskLabel(Label label, String fullText) {
         label.setText("");
         Timeline timeline = new Timeline();
-
         for (int i = 0; i < fullText.length(); i++) {
             final int index = i;
             KeyFrame keyFrame = new KeyFrame(Duration.seconds(index * 0.05), event -> {
@@ -116,10 +122,8 @@ public class GameStartScene extends Application {
             });
             timeline.getKeyFrames().add(keyFrame);
         }
-
         timeline.play();
     }
-
     /**
      * Transitions to the main game scene, closing the current start scene.
      *
@@ -136,6 +140,13 @@ public class GameStartScene extends Application {
         }
     }
 
+    private void handleReassignmentError() {
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setTitle("Reassignment error");
+        errorAlert.setHeaderText("Maximum number of reassignments reached");
+        errorAlert.setContentText("You cannot reassign tasks more than three times.");
+        errorAlert.showAndWait();
+    }
     /**
      * The main entry point for all JavaFX applications.
      * The start method is called after the init method has returned,
@@ -143,6 +154,7 @@ public class GameStartScene extends Application {
      *
      * @param args the command line arguments.
      */
+
     public static void main(String[] args) {
         launch(args);
     }

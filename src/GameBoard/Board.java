@@ -63,36 +63,6 @@ public class Board {
         onTheBoard.add(card);
     }
 
-    /**
-     * Displays the current state of the board including all cards on the table.
-     */
-    public void DisplayBoard(){
-        System.out.print("Cards on the table:\n");
-        for (Card card : onTheBoard){
-            System.out.print(card.getName());
-            if (card.getWeapon() != null){
-                System.out.print(" and has " + card.getWeapon().getName() + "\n");
-            } else {
-                System.out.print("\n");
-            }
-        }
-        System.out.println();
-    }
-
-    /**
-     * Finds a card on the board by its ID.
-     *
-     * @param ID The unique identifier of the card to find.
-     * @return The card if found, null otherwise.
-     */
-    public Card findCard(String ID){
-        for (Card card : onTheBoard) {
-            if (card.getID().equals(ID)) {
-                return card;
-            }
-        }
-        return null;
-    }
 
     /**
      * Removes a card from the board by its ID.

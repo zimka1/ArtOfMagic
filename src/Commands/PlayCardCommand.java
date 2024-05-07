@@ -58,6 +58,7 @@ public class PlayCardCommand implements GameCommand {
             if (player.getWhose() == gameManager.getPlayer().getWhose()) {
                 taskStatus.setNumberMinionCards();
             }
+
             gameManager.selectCard(cardView);
             player.putCardOnTable(cardView.getCard().getID(), board);
             gameManager.setSelectedCardForAttack(null);

@@ -107,15 +107,6 @@ public class TaskStatus {
     }
 
     /**
-     * Sets the win or lose status of the game.
-     *
-     * @param winOrLose True if the player won, false otherwise.
-     */
-    public void setWinOrLose(boolean winOrLose) {
-        this.winOrLose = winOrLose;
-    }
-
-    /**
      * Updates the highest damage dealt to an opponent in one turn.
      *
      * @param damage The damage dealt in the current turn.

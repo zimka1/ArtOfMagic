@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * Manages the game state, including player turns, card interactions, task execution, and game setup.
@@ -308,13 +309,17 @@ public class GameManager {
     }
     /**
      * Draws initial cards for both players at the start of the game.
+     * This method ensures that each player receives a predefined number of initial cards from their respective decks.
+     * The card drawing process is executed five times for each player, using a lambda expression within a stream for concise iteration.
      */
+
     public void drawInitialCards() {
-        for (int i = 0; i < 5; i++) {
+        IntStream.range(0, 5).forEach(i -> {
             drawCardForPlayer(player, playerBoard);
             drawCardForPlayer(opponent, opponentBoard);
-        }
+        });
     }
+
     /**
      * Sets up interaction for a selected card.
      *

@@ -1,6 +1,6 @@
 package Commands;
 
-import Cards.CardView;
+import CardView.CardView;
 import Cards.TypeOfCard.Card_Weapon;
 import GameScene.*;
 import Judges.TaskStatus;

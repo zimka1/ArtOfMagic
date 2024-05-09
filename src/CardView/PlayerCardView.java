@@ -1,17 +1,15 @@
-package Players;
+package CardView;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 /**
  * Represents a visual component for displaying player information in a card format.
  * This class manages the layout and visual representation of player's name and health points (HP).
  */
-public class PlayerCardView extends StackPane {
+public class PlayerCardView extends GenericCardView {
     private String name;
     private int hp;
     private Label nameLabel;
@@ -24,6 +22,7 @@ public class PlayerCardView extends StackPane {
      * @param hp   The initial health points of the player to be displayed on the card.
      */
     public PlayerCardView(String name, int hp) {
+        super();
         this.name = name;
         this.hp = hp;
         initializeUI();
@@ -31,15 +30,10 @@ public class PlayerCardView extends StackPane {
 
     /**
      * Initializes the user interface components of the player card.
-     * This method sets up the background, name label, and health label of the card.
+     * This method sets up the name label and health label of the card.
      */
-    private void initializeUI() {
-        // Background setup for the player card
-        Rectangle background = new Rectangle(120, 150);
-        background.setFill(Color.DARKSEAGREEN);
-        background.setArcWidth(20);
-        background.setArcHeight(20);
-
+    @Override
+    protected void initializeUI() {
         // Label displaying the player's name
         nameLabel = new Label("Player: " + name);
         nameLabel.setFont(new Font("Arial", 14));
@@ -51,7 +45,7 @@ public class PlayerCardView extends StackPane {
         StackPane.setAlignment(hpLabel, Pos.CENTER);
 
         // Adding all components to the StackPane
-        this.getChildren().addAll(background, nameLabel, hpLabel);
+        this.getChildren().addAll(nameLabel, hpLabel);
     }
 
     /**

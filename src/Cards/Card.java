@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
  * Represents a card in a game, encompassing all properties and behaviors including attack mechanics,
  * health points, mana cost, and interactions with weapons.
  */
-public class Card {
+public abstract class Card {
     private String name;
     private int manaCost;
     private int power;

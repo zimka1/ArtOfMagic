@@ -2,10 +2,9 @@ package GameScene;
 
 import Cards.Card;
 import Cards.CardLibrary;
-import Cards.CardView;
+import CardView.CardView;
 import Cards.TypeOfCard.Card_Minion;
 import Cards.TypeOfCard.Card_Spell;
-import Cards.TypeOfCard.Card_Weapon;
 import Commands.*;
 import GameBoard.Board;
 import Judges.JudgeTask;

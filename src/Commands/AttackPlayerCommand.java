@@ -59,8 +59,6 @@ public class AttackPlayerCommand implements GameCommand {
         selectedCardForAttack.getCard().setAlreadyAttacked(1);
         if (selectedCardForAttack.getCard() instanceof Card_Spell) {
             handleSpellCard(taskStatus,selectedCardForAttack);
-        } else {
-            selectedCardForAttack = null;
         }
     }
 
@@ -76,7 +74,6 @@ public class AttackPlayerCommand implements GameCommand {
         attackingPlayer.minusMana(selectedCardForAttack.getCard().getManaCost());
         attackingPlayer.getHand().removeCard(selectedCardForAttack.getCard().getID());
         selectedCardForAttack.getCard().death(attackingBoard);
-        selectedCardForAttack = null;
         taskStatus.setNumberSpellCards();
         gameScene.updateManaLabels();
         gameScene.updateHandDisplay(attackingPlayer);

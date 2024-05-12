@@ -10,8 +10,8 @@ public class Player {
     private Hand hand = new Hand();
     private int hp = 10;
     private int whose = 0;
-    private int mana = 10;
-    private int nowMana = 100;
+    private int mana = 5;
+    private int nowMana = 5;
 
     /**
      * Constructs a new player with an identifier.

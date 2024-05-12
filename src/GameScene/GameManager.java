@@ -237,6 +237,7 @@ public class GameManager {
                 String defendingPlayerType = defendingPlayer.getWhose() == 1 ? "Player" : "Opponent";
                 notifyObservers(defendingPlayerType + " was attacked by <" + selectedCardForAttack.getCard().getName() + ">", attackingPlayerType);
             }
+            setSelectedCardForAttack(null);
         }
     }
 
